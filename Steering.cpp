@@ -5,7 +5,7 @@ class Steering {
 
 public:
     Steering() {
-        CytronMD steeringMotor = CytronMD(PWM_DIR, 11, 13);
+      steeringMotor = &CytronMD(PWM_DIR, 11, 13);
     }
 
     void moveSteering(int direction) {

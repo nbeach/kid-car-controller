@@ -3,9 +3,10 @@
 
 ## Needed
 - Steering control
+- E stop
 - Foot Throttle / F/R selector
-- Speed modes (w/ initial power surge?)
-- Throttle easing
+- Speed limiter (w/ initial power surge?)
+- Throttle Ramp up/down rate control
 
 
 ## Nice to have
