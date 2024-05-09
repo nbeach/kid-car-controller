@@ -22,3 +22,10 @@ class Drivetrain {
   }
 
 };
+
+// class EasingDrivetrain {
+//     public:
+//     EasingDrivetrain() {
+     
+//     }
+// };

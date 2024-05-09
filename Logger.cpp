@@ -1,14 +1,14 @@
 // #include <SoftwareSerial.h>
 
-// class Logger {
+class Logger {
 
-//   public:
-//   Logger() {
-//       Serial.begin(9600);
-//   }
+  public:
+  init() {
+      // Serial.begin(9600);
+  }
 
-//   void info() {
+  void info() {
 
-//   }
+  }
 
-// };
+};
