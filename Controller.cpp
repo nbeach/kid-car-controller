@@ -9,9 +9,8 @@ class Controller {
      ps2.begin(9600);
   }
 
-  int throttle() {
-      int input = ps2.readButton(PS2_JOYSTICK_RIGHT_Y_AXIS);
-      int speed =  (input-128) * -2;
-      return speed;
+  int throttlePosition() {
+      int rawPosition = ps2.readButton(PS2_JOYSTICK_RIGHT_Y_AXIS);
+      return ((rawPosition - 128) * -2);
   }
 };
