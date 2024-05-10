@@ -1,34 +1,36 @@
 #include <SoftwareSerial.h>
-#include "Logger.cpp"
 #include "Controller.cpp"
 #include "Steering.cpp"
-#include "Drivetrain.cpp"
+#include "Motor.cpp"
 
-Logger logger;
 Controller controller;
 Steering steering;
-Drivetrain drivetrain;
+AbstractMotor* motor;
 
 int to256Position(int rawPosition) {
   return ((rawPosition - 128) * -2);
 }
 
+AbstractMotor* motorFactory() {
+  AbstractMotor* compositeMotor = new CompositeMotor();
+  return new RampingMotor(compositeMotor);
+}
+
 void setup()
 {
   Serial.begin(9600);
-  logger = Logger();
   controller = Controller();
+  steering = Steering();
+  motor = motorFactory();
 
-  drivetrain = Drivetrain();
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
-      drivetrain.setSpeed(to256Position(position));
+      motor->setSpeed(to256Position(position));
       Serial.println("Throttle Position");
       Serial.println(to256Position(position));
   });
 
-  // steering = Steering();
   controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
-      // steering.setSpeed(to256Position(position));
+      steering.moveSteering(to256Position(position));
       Serial.println("Steering Position");
       Serial.println(to256Position(position));
   });
@@ -71,6 +73,7 @@ void setup()
 void loop()
 {
   controller.poll();
+  motor->tick();
 }
 
 
