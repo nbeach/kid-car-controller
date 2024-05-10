@@ -13,7 +13,7 @@ int to256Position(int rawPosition) {
 
 AbstractMotor* motorFactory() {
   AbstractMotor* compositeMotor = new CompositeMotor();
-  return new RampingMotor(compositeMotor);
+  return new RampingMotor(0.128, compositeMotor);
 }
 
 void setup()
@@ -25,24 +25,20 @@ void setup()
 
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
       motor->setSpeed(to256Position(position));
-      Serial.println("Throttle Position");
-      Serial.println(to256Position(position));
+      Serial.println("Throttle Position: " + String(to256Position(position)));
   });
 
   controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
       steering.moveSteering(to256Position(position));
-      Serial.println("Steering Position");
-      Serial.println(to256Position(position));
+      Serial.println("Steering Position: " + String(to256Position(position)));
   });
 
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_X_AXIS, [](int position){ 
-      Serial.println("Right Joystick X Position");
-      Serial.println(to256Position(position));
+      Serial.println("Right Joystick X Position: " + String(to256Position(position)));
   });
 
   controller.onAxisChange(PS2_JOYSTICK_LEFT_Y_AXIS, [](int position){ 
-      Serial.println("Left Joystick Y Position");
-      Serial.println(to256Position(position));
+      Serial.println("Left Joystick Y Position: " + String(to256Position(position)));
   });
 
   controller.onButtonPressed(PS2_TRIANGLE, [](){ Serial.println("Triangle Pressed"); });

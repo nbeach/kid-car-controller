@@ -1,3 +1,4 @@
+#include <SoftwareSerial.h>
 #include "CytronMotorDriver.h"
 
 class AbstractMotor {
@@ -28,50 +29,41 @@ class CompositeMotor : public AbstractMotor {
 class RampingMotor : public AbstractMotor {
     protected:
     AbstractMotor* baseMotor;
-    int maxStepPerTenthSecond = 13;
+    double stepsPerMillisecond;
     int currentSpeed = 0;
-    int currentSpeedSetTime = 0;
+    int timeSpeedSet = 0;
     int targetSpeed = 0;
 
     void setCurrentSpeed(int speed) {
       currentSpeed = speed;
-      currentSpeedSetTime = millis();
+      timeSpeedSet = millis();
       baseMotor->setSpeed(speed);
+      Serial.println("Motor Speed: " + String(speed));
     }
 
     void stepTowardsTargetSpeed() {
-      int minSpeedStep = currentSpeed - maxStepPerTenthSecond;
-      int maxSpeedStep = currentSpeed + maxStepPerTenthSecond;
-
-      if(targetSpeed <= maxSpeedStep && targetSpeed >= minSpeedStep) {
-        setCurrentSpeed(targetSpeed);
-      } else {
-        setCurrentSpeed(currentSpeed + maxStepPerTenthSecond);
-      }
+      if(currentSpeed == targetSpeed) return;
+      int timePassedSinceSpeedSet = millis() - timeSpeedSet;
+      int speedIncrease = timePassedSinceSpeedSet * stepsPerMillisecond;
+      int newSpeed = currentSpeed + speedIncrease;
+      currentSpeed = newSpeed >= targetSpeed ? targetSpeed : newSpeed;
     }
-
-    int timeSinceCurrentSpeedSetMilliSeconds() {
-      int currentTime = millis();
-      return currentTime - currentSpeedSetTime;
-    }
-
 
     public:
-    RampingMotor(AbstractMotor* baseMotor) {
+    RampingMotor(double stepsPerMillisecond, AbstractMotor* baseMotor) {
+      this->stepsPerMillisecond = stepsPerMillisecond;
       this->baseMotor = baseMotor;
     }
 
     void setSpeed(int speed) {
       targetSpeed = speed;
+      setCurrentSpeed(currentSpeed);
+      Serial.println("Target Motor Speed: " + String(targetSpeed));
+
       stepTowardsTargetSpeed();
     }
 
     void tick() {
-      if(currentSpeed == targetSpeed) return;
-      int currentTime = millis();
-
-      if(timeSinceCurrentSpeedSetMilliSeconds() >= 100) {
-        stepTowardsTargetSpeed();
-      }
+      stepTowardsTargetSpeed();
     }
 };
