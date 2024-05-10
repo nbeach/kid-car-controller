@@ -7,8 +7,50 @@ class AbstractMotor {
   virtual void tick();
 };
 
+class Motor : public AbstractMotor {
+  private:
+  CytronMD* motor;
+
+  public: 
+  Motor(int pin1, int pin2) {
+    motor = new CytronMD(PWM_DIR, pin1, pin2);
+  }
+
+  void setSpeed(int speed) {
+    motor->setSpeed(speed);
+  }
+
+  void tick() {}
+};
+
+
+
+class RealCompositeMotor : public AbstractMotor {
+  private:
+  int count;
+  AbstractMotor* motors;
+
+  public: 
+  RealCompositeMotor(int count, AbstractMotor* motors) {
+    this->count = count;
+    // this.motors = motors;
+  }
+
+  void setSpeed(int speed) {
+    for (int i = 0; i < count; i++) {
+      motors[i].setSpeed(speed);
+    }
+  }
+
+  void tick() {
+     for (int i = 0; i < count; i++) {
+      motors[i].tick();
+    }
+  }
+};
+
 class CompositeMotor : public AbstractMotor {
-  protected:
+  private:
   CytronMD frontLeftMotor = CytronMD(PWM_DIR, 5, 4);
   CytronMD frontRightMotor = CytronMD(PWM_DIR, 10, 12);
   CytronMD rearLeftMotor = CytronMD(PWM_DIR, 3, 2);
@@ -27,7 +69,7 @@ class CompositeMotor : public AbstractMotor {
 };
 
 class RampingMotor : public AbstractMotor {
-    protected:
+    private:
     AbstractMotor* baseMotor;
     double stepsPerMillisecond;
     int currentSpeed = 0;
@@ -61,6 +103,10 @@ class RampingMotor : public AbstractMotor {
       Serial.println("Target Motor Speed: " + String(targetSpeed));
 
       stepTowardsTargetSpeed();
+    }
+
+    void setStepsPerMillisecond(double stepsPerMillisecond) {
+      this->stepsPerMillisecond = stepsPerMillisecond;
     }
 
     void tick() {

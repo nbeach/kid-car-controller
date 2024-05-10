@@ -1,45 +1,50 @@
 #include <SoftwareSerial.h>
 #include "Controller.cpp"
-#include "Steering.cpp"
 #include "Motor.cpp"
 
 Controller controller;
-Steering steering;
-AbstractMotor* motor;
+AbstractMotor* steeringMotor;
+AbstractMotor* driveMotor;
 
 int to256Position(int rawPosition) {
   return ((rawPosition - 128) * -2);
 }
 
-AbstractMotor* motorFactory() {
-  AbstractMotor* compositeMotor = new CompositeMotor();
-  return new RampingMotor(0.128, compositeMotor);
+AbstractMotor* steeringMotorFactory() {
+  return new RampingMotor(0.128, new Motor(11, 13));
+}
+
+AbstractMotor* driveMotorFactory() {
+  // AbstractMotor motors[] = { 
+  //   Motor(5, 4), //Front Left
+  //   Motor(10, 12), //Front Right
+  //   Motor(3, 2), //Rear Left
+  //   Motor(6, 7) //Rear Right
+  // };
+
+  // AbstractMotor* compositeMotor = new RealCompositeMotor(4, motors);
+  return new RampingMotor(0.128, new CompositeMotor());
 }
 
 void setup()
 {
   Serial.begin(9600);
   controller = Controller();
-  steering = Steering();
-  motor = motorFactory();
+  steeringMotor = steeringMotorFactory();
+  driveMotor = driveMotorFactory();
 
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
-      motor->setSpeed(to256Position(position));
+      driveMotor->setSpeed(to256Position(position));
       Serial.println("Throttle Position: " + String(to256Position(position)));
   });
 
   controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
-      steering.moveSteering(to256Position(position));
+      steeringMotor->setSpeed(to256Position(position));
       Serial.println("Steering Position: " + String(to256Position(position)));
   });
 
-  controller.onAxisChange(PS2_JOYSTICK_RIGHT_X_AXIS, [](int position){ 
-      Serial.println("Right Joystick X Position: " + String(to256Position(position)));
-  });
-
-  controller.onAxisChange(PS2_JOYSTICK_LEFT_Y_AXIS, [](int position){ 
-      Serial.println("Left Joystick Y Position: " + String(to256Position(position)));
-  });
+  controller.onAxisChange(PS2_JOYSTICK_RIGHT_X_AXIS, [](int position){ Serial.println("Right Joystick X Position: " + String(to256Position(position))); });
+  controller.onAxisChange(PS2_JOYSTICK_LEFT_Y_AXIS, [](int position){ Serial.println("Left Joystick Y Position: " + String(to256Position(position))); });
 
   controller.onButtonPressed(PS2_TRIANGLE, [](){ Serial.println("Triangle Pressed"); });
   controller.onButtonPressed(PS2_CIRCLE, [](){ Serial.println("Circle Pressed"); });
@@ -69,7 +74,8 @@ void setup()
 void loop()
 {
   controller.poll();
-  motor->tick();
+  driveMotor->tick();
+  steeringMotor->tick();
 }
 
 
