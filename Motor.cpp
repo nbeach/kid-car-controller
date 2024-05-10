@@ -4,7 +4,11 @@
 class AbstractMotor {
   public:
   virtual void setSpeed(int speed);
-  virtual void tick();
+};
+
+class NullMotor : public AbstractMotor {
+  public: 
+  void setSpeed(int speed) {}
 };
 
 class Motor : public AbstractMotor {
@@ -19,35 +23,25 @@ class Motor : public AbstractMotor {
   void setSpeed(int speed) {
     motor->setSpeed(speed);
   }
-
-  void tick() {}
 };
 
+// class RealCompositeMotor : public AbstractMotor {
+//   private:
+//   int count;
+//   AbstractMotor* motors;
 
+//   public: 
+//   RealCompositeMotor(int count, AbstractMotor* motors) {
+//     this->count = count;
+//     this->motors = motors;
+//   }
 
-class RealCompositeMotor : public AbstractMotor {
-  private:
-  int count;
-  AbstractMotor* motors;
-
-  public: 
-  RealCompositeMotor(int count, AbstractMotor* motors) {
-    this->count = count;
-    // this.motors = motors;
-  }
-
-  void setSpeed(int speed) {
-    for (int i = 0; i < count; i++) {
-      motors[i].setSpeed(speed);
-    }
-  }
-
-  void tick() {
-     for (int i = 0; i < count; i++) {
-      motors[i].tick();
-    }
-  }
-};
+//   void setSpeed(int speed) {
+//     for (int i = 0; i < count; i++) {
+//       motors[i].setSpeed(speed);
+//     }
+//   }
+// };
 
 class CompositeMotor : public AbstractMotor {
   private:
@@ -63,9 +57,6 @@ class CompositeMotor : public AbstractMotor {
     rearLeftMotor.setSpeed(speed); 
     rearRightMotor.setSpeed(speed);
   }
-
-  void tick() {}
-
 };
 
 class RampingMotor : public AbstractMotor {
@@ -79,37 +70,129 @@ class RampingMotor : public AbstractMotor {
     void setCurrentSpeed(int speed) {
       currentSpeed = speed;
       timeSpeedSet = millis();
+      Serial.println("Commanded Speed: " + String(speed));
       baseMotor->setSpeed(speed);
-      Serial.println("Motor Speed: " + String(speed));
     }
 
     void stepTowardsTargetSpeed() {
       if(currentSpeed == targetSpeed) return;
       int timePassedSinceSpeedSet = millis() - timeSpeedSet;
-      int speedIncrease = timePassedSinceSpeedSet * stepsPerMillisecond;
-      int newSpeed = currentSpeed + speedIncrease;
-      currentSpeed = newSpeed >= targetSpeed ? targetSpeed : newSpeed;
+      bool forwardDirection = targetSpeed >= 0;
+      // int adjustedStepsPerMillisecond = stepsPerMillisecond;
+      int adjustedStepsPerMillisecond = (!forwardDirection && (stepsPerMillisecond < 1.0)) ? 1.0 : stepsPerMillisecond; //Limit how deceleration ramping for safety
+      int speedChange = timePassedSinceSpeedSet * adjustedStepsPerMillisecond;
+      int newSpeed = forwardDirection ? currentSpeed + speedChange :  currentSpeed - speedChange;
+
+
+      Serial.println("Target Motor Speed: " + String(targetSpeed));
+      if(forwardDirection) {
+        setCurrentSpeed(newSpeed >= targetSpeed ? targetSpeed : newSpeed);
+      } else {
+        setCurrentSpeed(newSpeed <= targetSpeed ? targetSpeed : newSpeed);
+      }
+      
     }
 
     public:
-    RampingMotor(double stepsPerMillisecond, AbstractMotor* baseMotor) {
-      this->stepsPerMillisecond = stepsPerMillisecond;
+    RampingMotor(AbstractMotor* baseMotor) {
+      this->stepsPerMillisecond = 0.5;
       this->baseMotor = baseMotor;
     }
 
     void setSpeed(int speed) {
       targetSpeed = speed;
-      setCurrentSpeed(currentSpeed);
-      Serial.println("Target Motor Speed: " + String(targetSpeed));
-
-      stepTowardsTargetSpeed();
+      setCurrentSpeed(currentSpeed);   
     }
 
-    void setStepsPerMillisecond(double stepsPerMillisecond) {
+    void setMaxSpeedStepsPerMillisecond(double stepsPerMillisecond) {
       this->stepsPerMillisecond = stepsPerMillisecond;
+      Serial.println("Ramping Rate: " + String(stepsPerMillisecond));
     }
 
     void tick() {
       stepTowardsTargetSpeed();
     }
+};
+
+class SpeedLimitedMotor : public AbstractMotor {
+  private:
+  AbstractMotor* baseMotor;
+  int speedLimit = 256;
+
+  public: 
+  SpeedLimitedMotor(AbstractMotor* baseMotor) {
+    this->baseMotor = baseMotor;
+  }
+
+  void setSpeed(int speed) {
+    int maxForwardSpeed = speedLimit;
+    int maxReverseSpeed = speedLimit * -1;
+
+    int newSpeed = speed;
+    if(speed > maxForwardSpeed) newSpeed = maxForwardSpeed;
+    else if(speed < maxReverseSpeed) newSpeed = maxReverseSpeed;
+  
+    if(speed > maxForwardSpeed || speed < maxReverseSpeed) Serial.println("Limited Speed: " + String(newSpeed));
+    baseMotor->setSpeed(newSpeed);
+  }
+
+  void setSpeedLimit(int limit) {
+    speedLimit = limit;
+    Serial.println("Speed Limit: " + String(limit));
+  }
+};
+
+class EmergencyStopMotor : public AbstractMotor {
+  private:
+  AbstractMotor* baseMotor;
+  bool stop = false;
+
+  public: 
+  EmergencyStopMotor(AbstractMotor* baseMotor) {
+    this->baseMotor = baseMotor;
+  }
+
+  void setSpeed(int speed) {
+    if(stop) Serial.println("Emergency Stop Enabled");
+    baseMotor->setSpeed(stop ? 0 : speed);
+  }
+
+  void toggleEmergencyStop() {
+    stop = !stop;
+    if(stop) setSpeed(0);
+  }
+};
+
+class RampingSpeedLimitedEmergencyStopMotor : public AbstractMotor {
+  private:
+  EmergencyStopMotor* emergencyStopMotor;
+  SpeedLimitedMotor* speedLimitedMotor;
+  RampingMotor* rampingMotor;
+
+  public:
+  RampingSpeedLimitedEmergencyStopMotor(AbstractMotor* baseMotor) {
+    this->emergencyStopMotor = new EmergencyStopMotor(baseMotor);
+    this->speedLimitedMotor = new SpeedLimitedMotor(this->emergencyStopMotor);
+    this->rampingMotor = new RampingMotor(this->speedLimitedMotor);
+  }
+
+  void setSpeed(int speed) {
+    this->rampingMotor->setSpeed(speed);
+  }
+
+  void setMaxSpeedStepsPerMillisecond(double stepsPerMillisecond) {
+    this->rampingMotor->setMaxSpeedStepsPerMillisecond(stepsPerMillisecond);
+  }
+
+  void setSpeedLimit(int limit) {
+    this->speedLimitedMotor->setSpeedLimit(limit);
+  }
+
+  void toggleEmergencyStop() {
+    this->emergencyStopMotor->toggleEmergencyStop();
+  }
+
+  void tick() {
+    this->rampingMotor->tick();
+  }
 };
