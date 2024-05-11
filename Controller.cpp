@@ -10,6 +10,14 @@ class Controller {
   int axisStates[26];
   buttonCallback buttonCallbacks[26];
   axisCallback axisCallbacks[26];
+  int vibrationStartedTime = -1;
+  int vibrationDuration = 0;
+
+  void maybeEndVibration() {
+    int now = millis();
+    int vibrationEndTime = vibrationStartedTime + vibrationDuration;
+    if(now >= vibrationEndTime) ps2.vibrate(2, 0);
+  }
 
   public:
   Controller() {
@@ -50,6 +58,8 @@ class Controller {
     pollAxisState(PS2_JOYSTICK_LEFT_Y_AXIS);
     pollAxisState(PS2_JOYSTICK_RIGHT_X_AXIS);
     pollAxisState(PS2_JOYSTICK_RIGHT_Y_AXIS);
+
+    maybeEndVibration();
   }
 
   void pollButtonState(int button) {
@@ -84,4 +94,11 @@ class Controller {
   void onAxisChange(int axis, void (*func)(int)) {
      axisCallbacks[axis] = func;
   }
+
+  void vibrate(int durationMilliseconds, int intensity) {
+    vibrationStartedTime = millis();
+    vibrationDuration = durationMilliseconds;
+    ps2.vibrate(2, intensity);
+  }
+
 };

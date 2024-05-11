@@ -42,30 +42,39 @@ void setup()
   });
 
   controller.onButtonPressed(PS2_LEFT_1, [](){ 
-    int limit = driveMotorSpeedLimitSelector->decrease();
-    driveMotor->setSpeedLimit(limit);
+    int oldLimit = driveMotorSpeedLimitSelector->currentLimit();
+    int newLimit = driveMotorSpeedLimitSelector->decrease();
+    if(newLimit != oldLimit) controller.vibrate(150, 128);
+    driveMotor->setSpeedLimit(newLimit);
   });
 
   controller.onButtonPressed(PS2_RIGHT_1, [](){ 
-    int limit = driveMotorSpeedLimitSelector->increase();
-    driveMotor->setSpeedLimit(limit);
+    int oldLimit = driveMotorSpeedLimitSelector->currentLimit();
+    int newLimit = driveMotorSpeedLimitSelector->increase();
+    if(newLimit != oldLimit) controller.vibrate(150, 128);
+    driveMotor->setSpeedLimit(newLimit);
   });
 
   controller.onButtonPressed(PS2_LEFT_2, [](){ 
-    double rate = driveMotorRampingSelector->decrease();
-    driveMotor->setMaxSpeedStepsPerMillisecond(rate);
+    double oldRate =  driveMotorRampingSelector->currentRate();
+    double newRate = driveMotorRampingSelector->decrease();
+    if(newRate != oldRate) controller.vibrate(150, 128);
+    driveMotor->setMaxSpeedStepsPerMillisecond(newRate);
   });
 
   controller.onButtonPressed(PS2_RIGHT_2, [](){ 
-    double rate = driveMotorRampingSelector->increase();
-    driveMotor->setMaxSpeedStepsPerMillisecond(rate);
+    double oldRate =  driveMotorRampingSelector->currentRate();
+    double newRate = driveMotorRampingSelector->increase();
+    if(newRate != oldRate) controller.vibrate(150, 128);
+    driveMotor->setMaxSpeedStepsPerMillisecond(newRate);
   });
 
   controller.onButtonPressed(PS2_TRIANGLE, [](){ 
     driveMotor->toggleEmergencyStop();
+    controller.vibrate(200, 128);
   });
 
-  delay(1000);
+  delay(200);
 }
 
 void loop()

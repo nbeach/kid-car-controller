@@ -62,38 +62,36 @@ class CompositeMotor : public AbstractMotor {
 class RampingMotor : public AbstractMotor {
     private:
     AbstractMotor* baseMotor;
-    double stepsPerMillisecond;
+    const double DECELERATION_RATE = 0.5;
+    double stepsPerMillisecond = 0.5;
+    int initialSpeed = 0;
     int currentSpeed = 0;
-    int timeSpeedSet = 0;
     int targetSpeed = 0;
+    int timeSpeedSet = 0;
 
     void setCurrentSpeed(int speed) {
-      if(currentSpeed == speed) return;
+      if(speed == currentSpeed || currentSpeed == targetSpeed) return;
       currentSpeed = speed;
-      timeSpeedSet = millis();
       Serial.println("Commanded Speed: " + String(speed));
-      baseMotor->setSpeed(speed);
+      baseMotor->setSpeed(currentSpeed);
     }
 
     void stepTowardsTargetSpeed() {
-      const double minimumDecelerationRate = 2.5;
       if(currentSpeed == targetSpeed) return;
-
-      bool isDeceleratingFromReverse = currentSpeed < 0 && targetSpeed > currentSpeed;
-      bool isDeceleratingFromForward = currentSpeed > 0 && targetSpeed < currentSpeed;
-      bool isAcceleratingForward = currentSpeed >= 0 && currentSpeed < targetSpeed;
+      bool isAcceleratingForward = (targetSpeed > 0) && (currentSpeed < targetSpeed);
+      bool isDeceleratingFromForward = (currentSpeed > 0) && (targetSpeed < currentSpeed);
+      bool isDeceleratingFromReverse = (currentSpeed < 0) && (targetSpeed > currentSpeed);
       bool isDecelerating = isDeceleratingFromForward || isDeceleratingFromReverse;
 
+      double rate = isDecelerating ? DECELERATION_RATE : stepsPerMillisecond; //Limit how deceleration ramping for safety
       int timePassedSinceSpeedSet = millis() - timeSpeedSet;
-      double adjustedStepsPerMillisecond = isDecelerating ? minimumDecelerationRate : stepsPerMillisecond; //Limit how deceleration ramping for safety
-      int speedChange = timePassedSinceSpeedSet * adjustedStepsPerMillisecond;
+      int speedChangeFromInitial = timePassedSinceSpeedSet * rate;
       
-      Serial.println("Next Speed Step: " + String(speedChange));
       if(isAcceleratingForward || isDeceleratingFromReverse) {
-        int newSpeed = currentSpeed + speedChange;
+        int newSpeed = initialSpeed + speedChangeFromInitial;
         setCurrentSpeed(newSpeed >= targetSpeed ? targetSpeed : newSpeed);
       } else {
-         int newSpeed = currentSpeed - speedChange;
+        int newSpeed = initialSpeed - speedChangeFromInitial;
         setCurrentSpeed(newSpeed <= targetSpeed ? targetSpeed : newSpeed);
       }
     }
@@ -105,8 +103,9 @@ class RampingMotor : public AbstractMotor {
     }
 
     void setSpeed(int speed) {
+      initialSpeed = currentSpeed;
       targetSpeed = speed;
-      setCurrentSpeed(currentSpeed);   
+      timeSpeedSet = millis();
     }
 
     void setMaxSpeedStepsPerMillisecond(double stepsPerMillisecond) {
@@ -158,12 +157,13 @@ class EmergencyStopMotor : public AbstractMotor {
   }
 
   void setSpeed(int speed) {
-    if(stop) Serial.println("Emergency Stop Enabled");
+    if(speed != 0 && stop) Serial.println("Speed Change Ignored. Emergency Stop Enabled.");
     baseMotor->setSpeed(stop ? 0 : speed);
   }
 
   void toggleEmergencyStop() {
     stop = !stop;
+    Serial.println("Emergency Stop Enabled: " + String(stop));
     if(stop) setSpeed(0);
   }
 };
