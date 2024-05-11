@@ -68,6 +68,7 @@ class RampingMotor : public AbstractMotor {
     int targetSpeed = 0;
 
     void setCurrentSpeed(int speed) {
+      if(currentSpeed == speed) return;
       currentSpeed = speed;
       timeSpeedSet = millis();
       Serial.println("Commanded Speed: " + String(speed));
@@ -75,22 +76,26 @@ class RampingMotor : public AbstractMotor {
     }
 
     void stepTowardsTargetSpeed() {
+      const double minimumDecelerationRate = 2.5;
       if(currentSpeed == targetSpeed) return;
+
+      bool isDeceleratingFromReverse = currentSpeed < 0 && targetSpeed > currentSpeed;
+      bool isDeceleratingFromForward = currentSpeed > 0 && targetSpeed < currentSpeed;
+      bool isAcceleratingForward = currentSpeed >= 0 && currentSpeed < targetSpeed;
+      bool isDecelerating = isDeceleratingFromForward || isDeceleratingFromReverse;
+
       int timePassedSinceSpeedSet = millis() - timeSpeedSet;
-      bool forwardDirection = targetSpeed >= 0;
-      // int adjustedStepsPerMillisecond = stepsPerMillisecond;
-      int adjustedStepsPerMillisecond = (!forwardDirection && (stepsPerMillisecond < 1.0)) ? 1.0 : stepsPerMillisecond; //Limit how deceleration ramping for safety
+      double adjustedStepsPerMillisecond = isDecelerating ? minimumDecelerationRate : stepsPerMillisecond; //Limit how deceleration ramping for safety
       int speedChange = timePassedSinceSpeedSet * adjustedStepsPerMillisecond;
-      int newSpeed = forwardDirection ? currentSpeed + speedChange :  currentSpeed - speedChange;
-
-
-      Serial.println("Target Motor Speed: " + String(targetSpeed));
-      if(forwardDirection) {
+      
+      Serial.println("Next Speed Step: " + String(speedChange));
+      if(isAcceleratingForward || isDeceleratingFromReverse) {
+        int newSpeed = currentSpeed + speedChange;
         setCurrentSpeed(newSpeed >= targetSpeed ? targetSpeed : newSpeed);
       } else {
+         int newSpeed = currentSpeed - speedChange;
         setCurrentSpeed(newSpeed <= targetSpeed ? targetSpeed : newSpeed);
       }
-      
     }
 
     public:
