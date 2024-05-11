@@ -14,6 +14,7 @@ AbstractMotor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 RampingSelector* driveMotorRampingSelector;
 SpeedLimitSelector* driveMotorSpeedLimitSelector;
+int lastControllerThrottlePosition = 0;
 
 void setup()
 {
@@ -33,11 +34,21 @@ void setup()
 
   manualThrottle->onChange([](int position){ 
       Serial.println("Manual Throttle Position: " + String(position));
+      if(lastControllerThrottlePosition != 0) {
+        Serial.println("Controller Throttle Engaged. Ignoring Manual Throttle Input.");
+        return;
+      }
+      driveMotor->setSpeed(position);
   });
 
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
       Serial.println("Controller Throttle Position: " + String(position));
-      driveMotor->setSpeed(position);
+      lastControllerThrottlePosition = position;
+      if(position == 0) {
+         driveMotor->setSpeed(manualThrottle->getPosition());
+      } else {
+          driveMotor->setSpeed(position);
+      }  
   });
 
   controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 

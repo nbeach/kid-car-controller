@@ -34,4 +34,8 @@ class ManualThrottle {
         lastThrottlePosition = throttle;
         callback(throttle);
     }
+
+    int getPosition() {
+      return lastThrottlePosition;
+    }
 };
