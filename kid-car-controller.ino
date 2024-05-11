@@ -1,5 +1,7 @@
+#include "Arduino.h"
 #include <SoftwareSerial.h>
 #include "Controller.cpp"
+#include "ManualThrottle.cpp"
 #include "Motor.cpp"
 #include "RampingSelector.cpp"
 #include "SpeedLimitSelector.cpp"
@@ -7,20 +9,18 @@
 const int DISABLE_DRIVE_MOTORS = false;
 
 Controller controller;
+ManualThrottle* manualThrottle;
 AbstractMotor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 RampingSelector* driveMotorRampingSelector;
 SpeedLimitSelector* driveMotorSpeedLimitSelector;
-
-int to256Position(int rawPosition) {
-  return ((rawPosition - 128) * -2);
-}
 
 void setup()
 {
   Serial.begin(9600);
 
   controller = Controller();
+  manualThrottle = new ManualThrottle(0, 1, 2);
   steeringMotor = new Motor(11, 13);
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
   driveMotor = new RampingSpeedLimitedEmergencyStopMotor(baseMotor);
@@ -31,14 +31,18 @@ void setup()
   driveMotorSpeedLimitSelector = new SpeedLimitSelector();
   driveMotor->setSpeedLimit(driveMotorSpeedLimitSelector->currentLimit());
 
+  manualThrottle->onChange([](int position){ 
+      Serial.println("Manual Throttle Position: " + String(position));
+  });
+
   controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
-      Serial.println("Throttle Position: " + String(to256Position(position)));
-      driveMotor->setSpeed(to256Position(position));
+      Serial.println("Controller Throttle Position: " + String(position));
+      driveMotor->setSpeed(position);
   });
 
   controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
-      Serial.println("Steering Position: " + String(to256Position(position)));
-      steeringMotor->setSpeed(to256Position(position));
+      Serial.println("Steering Position: " + String(position));
+      steeringMotor->setSpeed(position);
   });
 
   controller.onButtonPressed(PS2_LEFT_1, [](){ 
@@ -80,6 +84,7 @@ void setup()
 void loop()
 {
   controller.poll();
+  manualThrottle->poll();
   driveMotor->tick();
 }
 

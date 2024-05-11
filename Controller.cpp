@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "Cytron_PS2Shield.h"
 
 typedef void(*buttonCallback)();
@@ -17,6 +18,10 @@ class Controller {
     int now = millis();
     int vibrationEndTime = vibrationStartedTime + vibrationDuration;
     if(now >= vibrationEndTime) ps2.vibrate(2, 0);
+  }
+
+  int to256Position(int rawPosition) {
+    return ((rawPosition - 128) * -2);
   }
 
   public:
@@ -78,7 +83,7 @@ class Controller {
   void pollAxisState(int axis) {
     if(axisCallbacks[axis] == NULL) return;
 
-    int newAxisPoisition = ps2.readButton(axis);
+    int newAxisPoisition = to256Position(ps2.readButton(axis));
     int oldAxisPosition = axisStates[axis];
     if(newAxisPoisition != oldAxisPosition) {
       axisCallbacks[axis](newAxisPoisition);
