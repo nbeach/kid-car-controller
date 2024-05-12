@@ -2,7 +2,7 @@
 #define Controller_h
 
 #include "Arduino.h"
-#include "Cytron_PS2Shield.h"
+#include "../vendor/Cytron_PS2Shield.h"
 
 typedef void(*buttonCallback)();
 typedef void(*axisCallback)(int);

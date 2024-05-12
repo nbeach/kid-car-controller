@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "AbstractMotor.h"
-#include "CytronMotorDriver.h"
+#include "../vendor/CytronMotorDriver.h"
 
 class CompositeMotor : public AbstractMotor {
     private:

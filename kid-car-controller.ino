@@ -1,14 +1,14 @@
 #include "Arduino.h"
 #include <SoftwareSerial.h>
-#include "Controller.h"
-#include "ManualThrottle.h"
-#include "AbstractMotor.h"
-#include "NullMotor.h"
-#include "CompositeMotor.h"
-#include "RampingSpeedLimitedEmergencyStopMotor.h"
-#include "Motor.h"
-#include "RampingSelector.h"
-#include "SpeedLimitSelector.h"
+#include "src/control/Controller.h"
+#include "src/control/ManualThrottle.h"
+#include "src/motor/AbstractMotor.h"
+#include "src/motor/NullMotor.h"
+#include "src/motor/CompositeMotor.h"
+#include "src/motor/RampingSpeedLimitedEmergencyStopMotor.h"
+#include "src/motor/Motor.h"
+#include "src/selection/RampingSelector.h"
+#include "src/selection/SpeedLimitSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
 int DISABLE_MANUAL_THROTTLE = false;
