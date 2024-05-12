@@ -92,6 +92,10 @@ class Controller {
     axisStates[axis] = newAxisPoisition;
   }
 
+  int getAxisState(int axis) {
+    return to256Position(ps2.readButton(axis));
+  }
+
   void onButtonPressed(int button, void (*func)()) {
     buttonCallbacks[button] = func;
   }

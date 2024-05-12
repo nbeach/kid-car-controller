@@ -3,7 +3,7 @@
 class RampingSelector {
     private:
     int rampingRateCount = 5;
-    double rampingRates[5] = { 0.25, 0.375, 0.5, 1.0, 256.0 };
+    double rampingRates[5] = { 0.0001, 0.0005, 0.001, 0.002, 0.003 };
     int currentRampingRateIndex = 2;
 
     public:

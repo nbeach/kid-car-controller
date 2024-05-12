@@ -3,12 +3,12 @@
 
 class AbstractMotor {
   public:
-  virtual void setSpeed(int speed);
+  virtual int setSpeed(int speed);
 };
 
 class NullMotor : public AbstractMotor {
   public: 
-  void setSpeed(int speed) {}
+  int setSpeed(int speed) { return speed; }
 };
 
 class Motor : public AbstractMotor {
@@ -20,8 +20,9 @@ class Motor : public AbstractMotor {
     motor = new CytronMD(PWM_DIR, pin1, pin2);
   }
 
-  void setSpeed(int speed) {
+  int setSpeed(int speed) {
     motor->setSpeed(speed);
+    return speed;
   }
 };
 
@@ -51,66 +52,76 @@ class CompositeMotor : public AbstractMotor {
   CytronMD rearRightMotor = CytronMD(PWM_DIR, 6, 7);
 
   public: 
-  void setSpeed(int speed) {
+  int setSpeed(int speed) {
     frontLeftMotor.setSpeed(speed);
     frontRightMotor.setSpeed(speed);
     rearLeftMotor.setSpeed(speed); 
     rearRightMotor.setSpeed(speed);
+    return speed;
   }
 };
 
 class RampingMotor : public AbstractMotor {
     private:
     AbstractMotor* baseMotor;
-    const double DECELERATION_RATE = 0.5;
-    double stepsPerMillisecond = 0.5;
+
+    double rampingRate = 0.001;
+    double decelerationRampingRate = 0.001;
     int initialSpeed = 0;
     int currentSpeed = 0;
     int targetSpeed = 0;
-    int timeSpeedSet = 0;
+    int timeCurrentSpeedSet = 0;
 
-    void setCurrentSpeed(int speed) {
-      if(speed == currentSpeed || currentSpeed == targetSpeed) return;
+    int setCurrentSpeed(int speed) {
+      if(speed == currentSpeed || currentSpeed == targetSpeed) return currentSpeed;
       currentSpeed = speed;
+      timeCurrentSpeedSet = millis();
       Serial.println("Commanded Speed: " + String(speed));
-      baseMotor->setSpeed(currentSpeed);
+      return baseMotor->setSpeed(currentSpeed);
     }
 
     void stepTowardsTargetSpeed() {
       if(currentSpeed == targetSpeed) return;
       bool isAcceleratingForward = (targetSpeed > 0) && (currentSpeed < targetSpeed);
-      bool isDeceleratingFromForward = (currentSpeed > 0) && (targetSpeed < currentSpeed);
+      bool isAcceleratingBackward = (targetSpeed < 0) && (currentSpeed > targetSpeed);
       bool isDeceleratingFromReverse = (currentSpeed < 0) && (targetSpeed > currentSpeed);
+      bool isDeceleratingFromForward = (currentSpeed > 0) && (targetSpeed < currentSpeed);
+      bool isAccelerating = isAcceleratingForward || isAcceleratingBackward;
       bool isDecelerating = isDeceleratingFromForward || isDeceleratingFromReverse;
 
-      double rate = isDecelerating ? DECELERATION_RATE : stepsPerMillisecond; //Limit how deceleration ramping for safety
-      int timePassedSinceSpeedSet = millis() - timeSpeedSet;
-      int speedChangeFromInitial = timePassedSinceSpeedSet * rate;
-      
+      int timePassedSinceCurrentSpeedSet = millis() - timeCurrentSpeedSet;
+      double rampingRateForDirection = isDecelerating ? decelerationRampingRate : rampingRate;
+      double timeItWouldTakeToAccelerateToCurrentSpeed = sqrt((1 / rampingRateForDirection) * abs(currentSpeed));
+      int changeDirection = isDecelerating ? -1 : 1;
+      double speedChangeFromInitial = rampingRateForDirection * pow(timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * changeDirection), 2);
+      speedChangeFromInitial =  (isAcceleratingBackward || isDeceleratingFromReverse) ? speedChangeFromInitial * -1 : speedChangeFromInitial;
+
       if(isAcceleratingForward || isDeceleratingFromReverse) {
-        int newSpeed = initialSpeed + speedChangeFromInitial;
-        setCurrentSpeed(newSpeed >= targetSpeed ? targetSpeed : newSpeed);
+          int newSpeed = speedChangeFromInitial >= targetSpeed ? targetSpeed : speedChangeFromInitial;
+          int actual = setCurrentSpeed(newSpeed);
+          if(actual != newSpeed) setSpeed(actual);
       } else {
-        int newSpeed = initialSpeed - speedChangeFromInitial;
-        setCurrentSpeed(newSpeed <= targetSpeed ? targetSpeed : newSpeed);
+          int newSpeed = speedChangeFromInitial <= targetSpeed ? targetSpeed : speedChangeFromInitial;
+          int actual = setCurrentSpeed(newSpeed);
+          if(actual != newSpeed) setSpeed(actual);
       }
     }
 
     public:
     RampingMotor(AbstractMotor* baseMotor) {
-      this->stepsPerMillisecond = 0.5;
       this->baseMotor = baseMotor;
     }
 
-    void setSpeed(int speed) {
+    int setSpeed(int speed) {
       initialSpeed = currentSpeed;
       targetSpeed = speed;
-      timeSpeedSet = millis();
+      timeCurrentSpeedSet = millis();
+      return speed;
     }
 
-    void setMaxSpeedStepsPerMillisecond(double stepsPerMillisecond) {
-      this->stepsPerMillisecond = stepsPerMillisecond;
-      Serial.println("Ramping Rate: " + String(stepsPerMillisecond));
+    void setRampingRate(double rampingRate) {
+      this->rampingRate = rampingRate;
+      Serial.println("Ramping Rate: " + String(rampingRate));
     }
 
     void tick() {
@@ -128,7 +139,7 @@ class SpeedLimitedMotor : public AbstractMotor {
     this->baseMotor = baseMotor;
   }
 
-  void setSpeed(int speed) {
+  int setSpeed(int speed) {
     int maxForwardSpeed = speedLimit;
     int maxReverseSpeed = speedLimit * -1;
 
@@ -137,7 +148,7 @@ class SpeedLimitedMotor : public AbstractMotor {
     else if(speed < maxReverseSpeed) newSpeed = maxReverseSpeed;
   
     if(speed > maxForwardSpeed || speed < maxReverseSpeed) Serial.println("Limited Speed: " + String(newSpeed));
-    baseMotor->setSpeed(newSpeed);
+    return baseMotor->setSpeed(newSpeed);
   }
 
   void setSpeedLimit(int limit) {
@@ -156,9 +167,9 @@ class EmergencyStopMotor : public AbstractMotor {
     this->baseMotor = baseMotor;
   }
 
-  void setSpeed(int speed) {
+  int setSpeed(int speed) {
     if(speed != 0 && stop) Serial.println("Speed Change Ignored. Emergency Stop Enabled.");
-    baseMotor->setSpeed(stop ? 0 : speed);
+    return baseMotor->setSpeed(stop ? 0 : speed);
   }
 
   void toggleEmergencyStop() {
@@ -181,12 +192,12 @@ class RampingSpeedLimitedEmergencyStopMotor : public AbstractMotor {
     this->rampingMotor = new RampingMotor(this->speedLimitedMotor);
   }
 
-  void setSpeed(int speed) {
-    this->rampingMotor->setSpeed(speed);
+  int setSpeed(int speed) {
+    return this->rampingMotor->setSpeed(speed);
   }
 
-  void setMaxSpeedStepsPerMillisecond(double stepsPerMillisecond) {
-    this->rampingMotor->setMaxSpeedStepsPerMillisecond(stepsPerMillisecond);
+  void setRampingRate(double rampingRate) {
+    this->rampingMotor->setRampingRate(rampingRate);
   }
 
   void setSpeedLimit(int limit) {
