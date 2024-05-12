@@ -1,9 +1,9 @@
-#include "Controller.h"
+#include "WirelessController.h"
 
 #include "Arduino.h"
 
 
-void Controller::maybeEndVibration() {
+void WirelessController::maybeEndVibration() {
   if(vibrationStartedTime == -1) return;
   int now = millis();
   int vibrationEndTime = vibrationStartedTime + vibrationDuration;
@@ -13,12 +13,12 @@ void Controller::maybeEndVibration() {
   }
 }
 
-int Controller::to256Position(int rawPosition) {
+int WirelessController::to256Position(int rawPosition) {
   return ((rawPosition - 128) * -2);
 }
 
 
-Controller::Controller() {
+WirelessController::WirelessController(int pin1, int pin2) {
   for(int i = 0; i < 26; i++) {
     buttonStates[i] = 1;
     axisStates[i] = 0;
@@ -26,11 +26,11 @@ Controller::Controller() {
     axisCallbacks[i] = NULL;
   }
   for(int i = 0; i < 26; i++) { }
-  ps2 = Cytron_PS2Shield(8,9);
+  ps2 = Cytron_PS2Shield(pin1, pin2);
   ps2.begin(9600);
 }
 
-void Controller::poll() {
+void WirelessController::poll() {
   pollButtonState(PS2_TRIANGLE);
   pollButtonState(PS2_CIRCLE);
   pollButtonState(PS2_CROSS);
@@ -60,7 +60,7 @@ void Controller::poll() {
   maybeEndVibration();
 }
 
-void Controller::pollButtonState(int button) {
+void WirelessController::pollButtonState(int button) {
   if(buttonCallbacks[button] == NULL) return;
 
   int newButtonState = ps2.readButton(button);
@@ -73,7 +73,7 @@ void Controller::pollButtonState(int button) {
   buttonStates[button] = newButtonState;
 }
 
-void Controller::pollAxisState(int axis) {
+void WirelessController::pollAxisState(int axis) {
   if(axisCallbacks[axis] == NULL) return;
 
   int newAxisPoisition = to256Position(ps2.readButton(axis));
@@ -85,19 +85,19 @@ void Controller::pollAxisState(int axis) {
   axisStates[axis] = newAxisPoisition;
 }
 
-int Controller::getAxisState(int axis) {
+int WirelessController::getAxisState(int axis) {
   return to256Position(ps2.readButton(axis));
 }
 
-void Controller::onButtonPressed(int button, void (*func)()) {
+void WirelessController::onButtonPressed(int button, void (*func)()) {
   buttonCallbacks[button] = func;
 }
 
-void Controller::onAxisChange(int axis, void (*func)(int)) {
+void WirelessController::onAxisChange(int axis, void (*func)(int)) {
    axisCallbacks[axis] = func;
 }
 
-void Controller::vibrate(int durationMilliseconds, int intensity) {
+void WirelessController::vibrate(int durationMilliseconds, int intensity) {
   vibrationStartedTime = millis();
   vibrationDuration = durationMilliseconds;
   ps2.vibrate(2, intensity);

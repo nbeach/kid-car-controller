@@ -1,5 +1,5 @@
-#ifndef Controller_h
-#define Controller_h
+#ifndef WirelessController_h
+#define WirelessController_h
 
 #include "Arduino.h"
 #include "../vendor/Cytron_PS2Shield.h"
@@ -7,7 +7,7 @@
 typedef void(*buttonCallback)();
 typedef void(*axisCallback)(int);
 
-class Controller {
+class WirelessController {
   protected:
   Cytron_PS2Shield ps2;
   int buttonStates[26];
@@ -21,7 +21,7 @@ class Controller {
   int to256Position(int rawPosition);
 
   public:
-  Controller();
+  WirelessController(int pin1, int pin2);
   void poll();
   void pollButtonState(int button);
   void pollAxisState(int axis);

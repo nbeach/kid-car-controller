@@ -1,11 +1,12 @@
-#ifndef ManualThrottle_h
-#define ManualThrottle_h
+#ifndef ThrottlePedal_h
+#define ThrottlePedal_h
 
 #include "Arduino.h"
+#include "AbstractThrottle.h"
 
 typedef void(*throttleCallback)(int);
 
-class ManualThrottle {
+class ThrottlePedal : public AbstractThrottle {
     private:
         int throttlePin;
         int forwardPin;
@@ -13,11 +14,10 @@ class ManualThrottle {
         int lastThrottlePosition = 0;
         int direction = 1;
         throttleCallback callback;
+        int fault = false;
 
     public:
-        ManualThrottle(int throttlePin, int forwardPin, int reversePin);
-        void onChange(void (*func)(int));
-        void poll();
+        ThrottlePedal(int throttlePin, int forwardPin, int reversePin);
         int getPosition();
 };
 

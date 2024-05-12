@@ -1,8 +1,9 @@
 #include "Arduino.h"
 #include <SoftwareSerial.h>
-#include "src/control/Controller.h"
-#include "src/control/ManualThrottle.h"
-#include "src/motor/AbstractMotor.h"
+#include "src/control/WirelessController.h"
+#include "src/control/ThrottlePedal.h"
+#include "src/control/PriorityCompositeThrottle.h"
+#include "src/control/WirelessControllerThrottle.h"
 #include "src/motor/NullMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/motor/RampingSpeedLimitedEmergencyStopMotor.h"
@@ -11,102 +12,96 @@
 #include "src/selection/SpeedLimitSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
-int DISABLE_MANUAL_THROTTLE = false;
 
-Controller controller;
-ManualThrottle* manualThrottle;
-AbstractMotor* steeringMotor;
+WirelessController* controller;
+PriorityCompositeThrottle* throttle;
+
+Motor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
-RampingSelector driveMotorRampingSelector;
-SpeedLimitSelector driveMotorSpeedLimitSelector;
-int lastControllerThrottlePosition = 0;
 
-void setup()
-{
+// RampingSelector driveMotorRampingSelector;
+// SpeedLimitSelector driveMotorSpeedLimitSelector;
+
+void setup() {
   Serial.begin(115200);
 
-  controller = Controller();
-  manualThrottle = new ManualThrottle(0, 1, 2);
+  // Wirless Controller
+  controller = new WirelessController(8, 9);
+
+  //Throttle
+  WirelessControllerThrottle* controllerThrottle = new WirelessControllerThrottle(controller, PS2_JOYSTICK_RIGHT_Y_AXIS);
+  ThrottlePedal* pedal = new ThrottlePedal(0, 1, 2);
+  throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
+
+  //Steering Motor
   steeringMotor = new Motor(11, 13);
+
+  //Drive Motor
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
   driveMotor = new RampingSpeedLimitedEmergencyStopMotor(baseMotor);
 
-  driveMotorRampingSelector = RampingSelector();
-  driveMotor->setRampingRate(driveMotorRampingSelector.currentRate());
+  // driveMotorRampingSelector = RampingSelector();
+  // driveMotor->setRampingRate(driveMotorRampingSelector.currentRate());
 
-  driveMotorSpeedLimitSelector = SpeedLimitSelector();
-  driveMotor->setSpeedLimit(driveMotorSpeedLimitSelector.currentLimit());
+  // driveMotorSpeedLimitSelector = SpeedLimitSelector();
+  // driveMotor->setSpeedLimit(driveMotorSpeedLimitSelector.currentLimit());
 
-  manualThrottle->onChange([](int position){ 
-      if(DISABLE_MANUAL_THROTTLE) return;
-      Serial.println("Manual Throttle Position: " + String(position));
-      if(lastControllerThrottlePosition != 0) {
-        Serial.println("Controller Throttle Engaged. Ignoring Manual Throttle Input.");
-        return;
-      }
+  throttle->onPositionChange([](int position){
+      Serial.println("Throttle Position: " + String(position));
       driveMotor->setSpeed(position);
   });
 
-  controller.onAxisChange(PS2_JOYSTICK_RIGHT_Y_AXIS, [](int position){ 
-      Serial.println("Controller Throttle Position: " + String(position));
-      lastControllerThrottlePosition = position;
-      if(!DISABLE_MANUAL_THROTTLE && position == 0) {
-         driveMotor->setSpeed(manualThrottle->getPosition());
-      } else {
-         driveMotor->setSpeed(position);
-      }  
-  });
-
-  controller.onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
+  controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
       Serial.println("Steering Position: " + String(position));
       steeringMotor->setSpeed(position);
   });
 
-  controller.onButtonPressed(PS2_LEFT_1, [](){ 
-    int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
-    int newLimit = driveMotorSpeedLimitSelector.decrease();
-    if(newLimit != oldLimit) controller.vibrate(150, 128);
-    driveMotor->setSpeedLimit(newLimit);
-  });
+  // controller->onButtonPressed(PS2_LEFT_1, [](){ 
+  //   int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
+  //   int newLimit = driveMotorSpeedLimitSelector.decrease();
+  //   if(newLimit != oldLimit) controller->vibrate(150, 128);
+  //   driveMotor->setSpeedLimit(newLimit);
+  // });
 
-  controller.onButtonPressed(PS2_RIGHT_1, [](){ 
-    int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
-    int newLimit = driveMotorSpeedLimitSelector.increase();
-    if(newLimit != oldLimit) controller.vibrate(150, 128);
-    driveMotor->setSpeedLimit(newLimit);
-  });
+  // controller->onButtonPressed(PS2_RIGHT_1, [](){ 
+  //   int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
+  //   int newLimit = driveMotorSpeedLimitSelector.increase();
+  //   if(newLimit != oldLimit) controller->vibrate(150, 128);
+  //   driveMotor->setSpeedLimit(newLimit);
+  // });
 
-  controller.onButtonPressed(PS2_LEFT_2, [](){ 
-    double oldRate = driveMotorRampingSelector.currentRate();
-    double newRate = driveMotorRampingSelector.decrease();
-    if(newRate != oldRate) controller.vibrate(150, 128);
-    driveMotor->setRampingRate(newRate);
-  });
+  // controller->onButtonPressed(PS2_LEFT_2, [](){ 
+  //   double oldRate = driveMotorRampingSelector.currentRate();
+  //   double newRate = driveMotorRampingSelector.decrease();
+  //   if(newRate != oldRate) controller->vibrate(150, 128);
+  //   driveMotor->setRampingRate(newRate);
+  // });
 
-  controller.onButtonPressed(PS2_RIGHT_2, [](){ 
-    double oldRate = driveMotorRampingSelector.currentRate();
-    double newRate = driveMotorRampingSelector.increase();
-    if(newRate != oldRate) controller.vibrate(150, 128);
-    driveMotor->setRampingRate(newRate);
-  });
+  // controller->onButtonPressed(PS2_RIGHT_2, [](){ 
+  //   double oldRate = driveMotorRampingSelector.currentRate();
+  //   double newRate = driveMotorRampingSelector.increase();
+  //   if(newRate != oldRate) controller->vibrate(150, 128);
+  //   driveMotor->setRampingRate(newRate);
+  // });
 
-  controller.onButtonPressed(PS2_TRIANGLE, [](){ 
+  controller->onButtonPressed(PS2_TRIANGLE, [](){ 
     driveMotor->toggleEmergencyStop();
-    controller.vibrate(200, 128);
+    controller->vibrate(200, 128);
   });
 
-  controller.onButtonPressed(PS2_SQUARE, [](){ 
-    DISABLE_MANUAL_THROTTLE = !DISABLE_MANUAL_THROTTLE;
-    controller.vibrate(200, 128);
+  controller->onButtonPressed(PS2_SQUARE, [](){ 
+    throttle->toggleDisableSecondary();
+    controller->vibrate(200, 128);
   });
+
 
   delay(200);
+  Serial.println("Init Complete");
 }
 
-void loop()
-{
-  controller.poll();
-  manualThrottle->poll();
+void loop() {
+  controller->poll();
+  throttle->poll();
   driveMotor->tick();
 }
 
