@@ -2,7 +2,11 @@
 #include <SoftwareSerial.h>
 #include "Controller.cpp"
 #include "ManualThrottle.cpp"
-#include "Motor.cpp"
+#include "AbstractMotor.h"
+#include "NullMotor.h"
+#include "CompositeMotor.h"
+#include "RampingSpeedLimitedEmergencyStopMotor.h"
+#include "Motor.h"
 #include "RampingSelector.cpp"
 #include "SpeedLimitSelector.cpp"
 
