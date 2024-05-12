@@ -1,117 +1,105 @@
+#include "Controller.h"
+
 #include "Arduino.h"
-#include "Cytron_PS2Shield.h"
 
-typedef void(*buttonCallback)();
-typedef void(*axisCallback)(int);
 
-class Controller {
-  protected:
-  Cytron_PS2Shield ps2;
-  int buttonStates[26];
-  int axisStates[26];
-  buttonCallback buttonCallbacks[26];
-  axisCallback axisCallbacks[26];
-  int vibrationStartedTime = -1;
-  int vibrationDuration = 0;
-
-  void maybeEndVibration() {
+void Controller::maybeEndVibration() {
   if(vibrationStartedTime == -1) return;
-    int now = millis();
-    int vibrationEndTime = vibrationStartedTime + vibrationDuration;
-    if(now >= vibrationEndTime) {
-      ps2.vibrate(2, 0);
-      vibrationStartedTime = -1;
-    }
+  int now = millis();
+  int vibrationEndTime = vibrationStartedTime + vibrationDuration;
+  if(now >= vibrationEndTime) {
+    ps2.vibrate(2, 0);
+    vibrationStartedTime = -1;
+  }
+}
+
+int Controller::to256Position(int rawPosition) {
+  return ((rawPosition - 128) * -2);
+}
+
+
+Controller::Controller() {
+  for(int i = 0; i < 26; i++) {
+    buttonStates[i] = 1;
+    axisStates[i] = 0;
+    buttonCallbacks[i] = NULL;
+    axisCallbacks[i] = NULL;
+  }
+  for(int i = 0; i < 26; i++) { }
+  ps2 = Cytron_PS2Shield(8,9);
+  ps2.begin(9600);
+}
+
+void Controller::poll() {
+  pollButtonState(PS2_TRIANGLE);
+  pollButtonState(PS2_CIRCLE);
+  pollButtonState(PS2_CROSS);
+  pollButtonState(PS2_SQUARE);
+
+  pollButtonState(PS2_LEFT_1);
+  pollButtonState(PS2_LEFT_2);
+  pollButtonState(PS2_RIGHT_1);
+  pollButtonState(PS2_RIGHT_2);
+
+  pollButtonState(PS2_UP);
+  pollButtonState(PS2_RIGHT);
+  pollButtonState(PS2_DOWN);
+  pollButtonState(PS2_LEFT);
+
+  pollButtonState(PS2_START);
+  pollButtonState(PS2_SELECT);
+
+  pollButtonState(PS2_JOYSTICK_LEFT);
+  pollButtonState(PS2_JOYSTICK_RIGHT);
+
+  pollAxisState(PS2_JOYSTICK_LEFT_X_AXIS);
+  pollAxisState(PS2_JOYSTICK_LEFT_Y_AXIS);
+  pollAxisState(PS2_JOYSTICK_RIGHT_X_AXIS);
+  pollAxisState(PS2_JOYSTICK_RIGHT_Y_AXIS);
+
+  maybeEndVibration();
+}
+
+void Controller::pollButtonState(int button) {
+  if(buttonCallbacks[button] == NULL) return;
+
+  int newButtonState = ps2.readButton(button);
+  bool buttonWasPressed = buttonStates[button] == 0;
+  bool buttonIsReleased = newButtonState == 1;
+  if(buttonWasPressed && buttonIsReleased) {
+    buttonCallbacks[button]();
   }
 
-  int to256Position(int rawPosition) {
-    return ((rawPosition - 128) * -2);
+  buttonStates[button] = newButtonState;
+}
+
+void Controller::pollAxisState(int axis) {
+  if(axisCallbacks[axis] == NULL) return;
+
+  int newAxisPoisition = to256Position(ps2.readButton(axis));
+  int oldAxisPosition = axisStates[axis];
+  if(newAxisPoisition != oldAxisPosition) {
+    axisCallbacks[axis](newAxisPoisition);
   }
 
-  public:
-  Controller() {
-    for(int i = 0; i < 26; i++) {
-      buttonStates[i] = 1;
-      axisStates[i] = 0;
-      buttonCallbacks[i] = NULL;
-      axisCallbacks[i] = NULL;
-    }
-    for(int i = 0; i < 26; i++) { }
-    ps2 = Cytron_PS2Shield(8,9);
-    ps2.begin(9600);
-  }
+  axisStates[axis] = newAxisPoisition;
+}
 
-  void poll() {
-    pollButtonState(PS2_TRIANGLE);
-    pollButtonState(PS2_CIRCLE);
-    pollButtonState(PS2_CROSS);
-    pollButtonState(PS2_SQUARE);
+int Controller::getAxisState(int axis) {
+  return to256Position(ps2.readButton(axis));
+}
 
-    pollButtonState(PS2_LEFT_1);
-    pollButtonState(PS2_LEFT_2);
-    pollButtonState(PS2_RIGHT_1);
-    pollButtonState(PS2_RIGHT_2);
+void Controller::onButtonPressed(int button, void (*func)()) {
+  buttonCallbacks[button] = func;
+}
 
-    pollButtonState(PS2_UP);
-    pollButtonState(PS2_RIGHT);
-    pollButtonState(PS2_DOWN);
-    pollButtonState(PS2_LEFT);
+void Controller::onAxisChange(int axis, void (*func)(int)) {
+   axisCallbacks[axis] = func;
+}
 
-    pollButtonState(PS2_START);
-    pollButtonState(PS2_SELECT);
+void Controller::vibrate(int durationMilliseconds, int intensity) {
+  vibrationStartedTime = millis();
+  vibrationDuration = durationMilliseconds;
+  ps2.vibrate(2, intensity);
+}
 
-    pollButtonState(PS2_JOYSTICK_LEFT);
-    pollButtonState(PS2_JOYSTICK_RIGHT);
-
-    pollAxisState(PS2_JOYSTICK_LEFT_X_AXIS);
-    pollAxisState(PS2_JOYSTICK_LEFT_Y_AXIS);
-    pollAxisState(PS2_JOYSTICK_RIGHT_X_AXIS);
-    pollAxisState(PS2_JOYSTICK_RIGHT_Y_AXIS);
-
-    maybeEndVibration();
-  }
-
-  void pollButtonState(int button) {
-    if(buttonCallbacks[button] == NULL) return;
-
-    int newButtonState = ps2.readButton(button);
-    bool buttonWasPressed = buttonStates[button] == 0;
-    bool buttonIsReleased = newButtonState == 1;
-    if(buttonWasPressed && buttonIsReleased) {
-      buttonCallbacks[button]();
-    }
-
-    buttonStates[button] = newButtonState;
-  }
-
-  void pollAxisState(int axis) {
-    if(axisCallbacks[axis] == NULL) return;
-
-    int newAxisPoisition = to256Position(ps2.readButton(axis));
-    int oldAxisPosition = axisStates[axis];
-    if(newAxisPoisition != oldAxisPosition) {
-      axisCallbacks[axis](newAxisPoisition);
-    }
-
-    axisStates[axis] = newAxisPoisition;
-  }
-
-  int getAxisState(int axis) {
-    return to256Position(ps2.readButton(axis));
-  }
-
-  void onButtonPressed(int button, void (*func)()) {
-    buttonCallbacks[button] = func;
-  }
-
-  void onAxisChange(int axis, void (*func)(int)) {
-     axisCallbacks[axis] = func;
-  }
-
-  void vibrate(int durationMilliseconds, int intensity) {
-    vibrationStartedTime = millis();
-    vibrationDuration = durationMilliseconds;
-    ps2.vibrate(2, intensity);
-  }
-
-};

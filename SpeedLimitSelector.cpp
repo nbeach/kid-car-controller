@@ -1,21 +1,15 @@
-class SpeedLimitSelector {
-private:
-    int speedLimitCount = 5;
-    int speedLimits[5] = { 64, 88, 112, 184, 256 };
-    int currentSpeedLimitIndex = 2;
+#include "SpeedLimitSelector.h"
 
-public:
-    int increase() {
-        if(currentSpeedLimitIndex < (speedLimitCount - 1)) currentSpeedLimitIndex++;
-        return currentLimit();
-    }
+int SpeedLimitSelector::increase() {
+    if(currentSpeedLimitIndex < (speedLimitCount - 1)) currentSpeedLimitIndex++;
+    return currentLimit();
+}
 
-    int decrease() {
-        if(currentSpeedLimitIndex > 0) currentSpeedLimitIndex--;
-        return currentLimit();
-    }
+int SpeedLimitSelector::decrease() {
+    if(currentSpeedLimitIndex > 0) currentSpeedLimitIndex--;
+    return currentLimit();
+}
 
-    int currentLimit() {
-        return speedLimits[currentSpeedLimitIndex];
-    }
-};
+int SpeedLimitSelector::currentLimit() {
+    return speedLimits[currentSpeedLimitIndex];
+}
