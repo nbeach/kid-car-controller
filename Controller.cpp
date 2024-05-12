@@ -15,9 +15,13 @@ class Controller {
   int vibrationDuration = 0;
 
   void maybeEndVibration() {
+  if(vibrationStartedTime == -1) return;
     int now = millis();
     int vibrationEndTime = vibrationStartedTime + vibrationDuration;
-    if(now >= vibrationEndTime) ps2.vibrate(2, 0);
+    if(now >= vibrationEndTime) {
+      ps2.vibrate(2, 0);
+      vibrationStartedTime = -1;
+    }
   }
 
   int to256Position(int rawPosition) {
