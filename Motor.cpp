@@ -8,7 +8,10 @@ class AbstractMotor {
 
 class NullMotor : public AbstractMotor {
   public: 
-  int setSpeed(int speed) { return speed; }
+  int setSpeed(int speed) { 
+    Serial.println("Commanded Speed: " + String(speed));
+    return speed; 
+  }
 };
 
 class Motor : public AbstractMotor {
@@ -21,6 +24,7 @@ class Motor : public AbstractMotor {
   }
 
   int setSpeed(int speed) {
+    Serial.println("Commanded Speed: " + String(speed));
     motor->setSpeed(speed);
     return speed;
   }
@@ -53,6 +57,7 @@ class CompositeMotor : public AbstractMotor {
 
   public: 
   int setSpeed(int speed) {
+    Serial.println("Commanded Speed: " + String(speed));
     frontLeftMotor.setSpeed(speed);
     frontRightMotor.setSpeed(speed);
     rearLeftMotor.setSpeed(speed); 
@@ -76,7 +81,6 @@ class RampingMotor : public AbstractMotor {
       if(speed == currentSpeed || currentSpeed == targetSpeed) return currentSpeed;
       currentSpeed = speed;
       timeCurrentSpeedSet = millis();
-      Serial.println("Commanded Speed: " + String(speed));
       return baseMotor->setSpeed(currentSpeed);
     }
 
