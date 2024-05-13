@@ -19,5 +19,4 @@ void SpeedLimitedMotor::setSpeed(int speed) {
 
 void SpeedLimitedMotor::setSpeedLimit(int limit) {
     speedLimit = limit;
-    Serial.println("Speed Limit: " + String(limit));
 }

@@ -2,16 +2,22 @@
 #define SpeedLimitSelector_h
 
 #include "Arduino.h"
+#include "../motor/RampingSpeedLimitedEmergencyStopMotor.h"
+
+typedef void(*speedLimitSelectorCallback)(int);
 
 class SpeedLimitSelector {
     private:
+        speedLimitSelectorCallback callback;
         int speedLimitCount = 5;
         int speedLimits[5] = { 64, 88, 112, 184, 256 };
         int currentSpeedLimitIndex = 2;
+        void emitChange();
 
     public:
-        int increase();
-        int decrease();
+        void onChange(void (*func)(int));
+        bool increase();
+        bool decrease();
         int currentLimit();
 };
 

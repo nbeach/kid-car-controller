@@ -17,11 +17,20 @@ const int DISABLE_DRIVE_MOTORS = false;
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
 
+SpeedLimitSelector* speedLimitSelector;
+
 RampingMotor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 
 void setup() {
   Serial.begin(115200);
+
+  //Drive Motor
+  AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
+  driveMotor = new RampingSpeedLimitedEmergencyStopMotor(0.001, baseMotor);
+
+  //Steering Motor
+  steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
 
   // Wirless Controller
   controller = new WirelessController(8, 9);
@@ -31,32 +40,39 @@ void setup() {
   ThrottlePedal* pedal = new ThrottlePedal(0, 1, 2);
   throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
 
-  //Steering Motor
-  steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
-
-  //Drive Motor
-  AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
-  driveMotor = new RampingSpeedLimitedEmergencyStopMotor(0.001, baseMotor);
-
   throttle->onPositionChange([](int position){
-      Serial.println("Throttle Position: " + String(position));
-      driveMotor->setSpeed(position);
+    Serial.println("Throttle Position: " + String(position));
+    driveMotor->setSpeed(position);
   });
+
+  //Speed Limit Selector
+  speedLimitSelector = new SpeedLimitSelector();
+  driveMotor->setSpeedLimit(speedLimitSelector->currentLimit());
+
+  speedLimitSelector->onChange([](int speed){
+    Serial.println("Speed Limit: " + String(speed));
+    driveMotor->setSpeedLimit(speed);
+  });
+
+  controller->onButtonPressed(PS2_LEFT_1, [](){
+    bool changed = speedLimitSelector->decrease();
+    controller->vibrate(changed ? 250 : 175, changed ? 200 : 100);
+  });
+
+  controller->onButtonPressed(PS2_RIGHT_1, [](){
+    bool changed = speedLimitSelector->increase();
+    controller->vibrate(changed ? 250 : 175, changed ? 200 : 100);
+  });
+
+
+
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
       Serial.println("Steering Position: " + String(position));
       steeringMotor->setSpeed(position);
   });
 
-  controller->onButtonPressed(PS2_LEFT_1, [](){ 
-    Serial.println("Speed Limit Decreased");
-    controller->vibrate(100, 128);
-  });
 
-  controller->onButtonPressed(PS2_RIGHT_1, [](){ 
-    Serial.println("Speed Limit Increased");
-    controller->vibrate(100, 128);
-  });
 
   controller->onButtonPressed(PS2_LEFT_2, [](){ 
     Serial.println("Acceleration Ramp Rate Decreased");

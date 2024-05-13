@@ -1,13 +1,31 @@
 #include "SpeedLimitSelector.h"
 
-int SpeedLimitSelector::increase() {
-    if(currentSpeedLimitIndex < (speedLimitCount - 1)) currentSpeedLimitIndex++;
-    return currentLimit();
+#include "Arduino.h"
+
+void SpeedLimitSelector::onChange(void (*func)(int)) {
+    this->callback = func;
 }
 
-int SpeedLimitSelector::decrease() {
-    if(currentSpeedLimitIndex > 0) currentSpeedLimitIndex--;
-    return currentLimit();
+void SpeedLimitSelector::emitChange() {
+    if(callback != NULL) callback(speedLimits[currentSpeedLimitIndex]);
+}
+
+bool SpeedLimitSelector::increase() {
+    if(currentSpeedLimitIndex < (speedLimitCount - 1)) {
+        currentSpeedLimitIndex++;
+        emitChange();
+        return true;
+    }
+    return false;
+}
+
+bool SpeedLimitSelector::decrease() {
+    if(currentSpeedLimitIndex > 0) {
+        currentSpeedLimitIndex--;
+        emitChange();
+        return true;
+    }
+    return false;
 }
 
 int SpeedLimitSelector::currentLimit() {
