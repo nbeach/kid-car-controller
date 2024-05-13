@@ -13,7 +13,7 @@ class CompositeMotor : public AbstractMotor {
         CytronMD rearRightMotor = CytronMD(PWM_DIR, 6, 7);
 
     public:
-        int setSpeed(int speed);
+        void setSpeed(int speed);
 };
 
 #endif

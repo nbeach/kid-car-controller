@@ -1,11 +1,11 @@
 #include "RampingMotor.h"
 #include "Arduino.h"
 
-int RampingMotor::setCurrentSpeed(int speed) {
+void RampingMotor::setCurrentSpeed(int speed) {
   if(speed == currentSpeed || currentSpeed == targetSpeed) return currentSpeed;
   currentSpeed = speed;
   timeCurrentSpeedSet = millis();
-  return baseMotor->setSpeed(currentSpeed);
+  baseMotor->setSpeed(currentSpeed);
 }
 
 void RampingMotor::stepTowardsTargetSpeed() {
@@ -25,13 +25,11 @@ void RampingMotor::stepTowardsTargetSpeed() {
   speedChangeFromInitial =  (isAcceleratingBackward || isDeceleratingFromReverse) ? speedChangeFromInitial * -1 : speedChangeFromInitial;
 
   if(isAcceleratingForward || isDeceleratingFromReverse) {
-      int newSpeed = speedChangeFromInitial >= targetSpeed ? targetSpeed : speedChangeFromInitial;
-      int actual = setCurrentSpeed(newSpeed);
-      if(actual != newSpeed) setSpeed(actual);
+    int newSpeed = speedChangeFromInitial >= targetSpeed ? targetSpeed : speedChangeFromInitial;
+    setCurrentSpeed(newSpeed);
   } else {
-      int newSpeed = speedChangeFromInitial <= targetSpeed ? targetSpeed : speedChangeFromInitial;
-      int actual = setCurrentSpeed(newSpeed);
-      if(actual != newSpeed) setSpeed(actual);
+    int newSpeed = speedChangeFromInitial <= targetSpeed ? targetSpeed : speedChangeFromInitial;
+    setCurrentSpeed(newSpeed);
   }
 }
 
@@ -40,11 +38,10 @@ RampingMotor::RampingMotor(AbstractMotor* baseMotor) {
   this->baseMotor = baseMotor;
 }
 
-int RampingMotor::setSpeed(int speed) {
+void RampingMotor::setSpeed(int speed) {
   initialSpeed = currentSpeed;
   targetSpeed = speed;
   timeCurrentSpeedSet = millis();
-  return speed;
 }
 
 void RampingMotor::setRampingRate(double rampingRate) {

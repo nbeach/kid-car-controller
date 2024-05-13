@@ -7,8 +7,8 @@ RampingSpeedLimitedEmergencyStopMotor::RampingSpeedLimitedEmergencyStopMotor(Abs
     this->rampingMotor = new RampingMotor(this->speedLimitedMotor);
 }
 
-int RampingSpeedLimitedEmergencyStopMotor::setSpeed(int speed) {
-    return this->rampingMotor->setSpeed(speed);
+void RampingSpeedLimitedEmergencyStopMotor::setSpeed(int speed) {
+    this->rampingMotor->setSpeed(speed);
 }
 
 void RampingSpeedLimitedEmergencyStopMotor::setRampingRate(double rampingRate) {
@@ -19,8 +19,8 @@ void RampingSpeedLimitedEmergencyStopMotor::setSpeedLimit(int limit) {
     this->speedLimitedMotor->setSpeedLimit(limit);
 }
 
-void RampingSpeedLimitedEmergencyStopMotor::toggleEmergencyStop() {
-    this->emergencyStopMotor->toggleEmergencyStop();
+bool RampingSpeedLimitedEmergencyStopMotor::toggleEmergencyStop() {
+    return this->emergencyStopMotor->toggleEmergencyStop();
 }
 
 void RampingSpeedLimitedEmergencyStopMotor::tick() {

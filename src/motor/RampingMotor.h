@@ -15,12 +15,12 @@ class RampingMotor : public AbstractMotor {
         int targetSpeed = 0;
         int timeCurrentSpeedSet = 0;
 
-        int setCurrentSpeed(int speed);
+        void setCurrentSpeed(int speed);
         void stepTowardsTargetSpeed();
 
     public:
         RampingMotor(AbstractMotor* baseMotor);
-        int setSpeed(int speed);
+        void setSpeed(int speed);
         void setRampingRate(double rampingRate);
         void tick();
 };

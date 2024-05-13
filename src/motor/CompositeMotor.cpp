@@ -2,13 +2,12 @@
 
 #include "Arduino.h"
 
-int CompositeMotor::setSpeed(int speed) {
+void CompositeMotor::setSpeed(int speed) {
     Serial.println("Commanded Speed: " + String(speed));
     frontLeftMotor.setSpeed(speed);
     frontRightMotor.setSpeed(speed);
     rearLeftMotor.setSpeed(speed);
     rearRightMotor.setSpeed(speed);
-    return speed;
 }
 
 

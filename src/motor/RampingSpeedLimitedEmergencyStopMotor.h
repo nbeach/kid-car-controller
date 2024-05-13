@@ -15,10 +15,10 @@ class RampingSpeedLimitedEmergencyStopMotor : public AbstractMotor {
 
     public:
         RampingSpeedLimitedEmergencyStopMotor(AbstractMotor* baseMotor);
-        int setSpeed(int speed);
+        void setSpeed(int speed);
         void setRampingRate(double rampingRate);
         void setSpeedLimit(int limit);
-        void toggleEmergencyStop();
+        bool toggleEmergencyStop();
         void tick();
 };
 

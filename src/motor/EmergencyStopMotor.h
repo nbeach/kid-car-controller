@@ -8,11 +8,12 @@ class EmergencyStopMotor : public AbstractMotor {
     private:
         AbstractMotor* baseMotor;
         bool stop = false;
+        int lastCommandedSpeed = 0;
 
     public:
         EmergencyStopMotor(AbstractMotor* baseMotor);
-        int setSpeed(int speed);
-        void toggleEmergencyStop();
+        void setSpeed(int speed);
+        bool toggleEmergencyStop();
 };
 
 #endif

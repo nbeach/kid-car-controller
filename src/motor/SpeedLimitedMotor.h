@@ -11,7 +11,7 @@ class SpeedLimitedMotor : public AbstractMotor {
 
     public:
         SpeedLimitedMotor(AbstractMotor* baseMotor);
-        int setSpeed(int speed);
+        void setSpeed(int speed);
         void setSpeedLimit(int limit);
 };
 

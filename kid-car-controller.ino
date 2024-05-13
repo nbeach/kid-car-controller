@@ -19,9 +19,6 @@ PriorityCompositeThrottle* throttle;
 Motor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 
-// RampingSelector driveMotorRampingSelector;
-// SpeedLimitSelector driveMotorSpeedLimitSelector;
-
 void setup() {
   Serial.begin(115200);
 
@@ -40,12 +37,6 @@ void setup() {
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
   driveMotor = new RampingSpeedLimitedEmergencyStopMotor(baseMotor);
 
-  // driveMotorRampingSelector = RampingSelector();
-  // driveMotor->setRampingRate(driveMotorRampingSelector.currentRate());
-
-  // driveMotorSpeedLimitSelector = SpeedLimitSelector();
-  // driveMotor->setSpeedLimit(driveMotorSpeedLimitSelector.currentLimit());
-
   throttle->onPositionChange([](int position){
       Serial.println("Throttle Position: " + String(position));
       driveMotor->setSpeed(position);
@@ -56,35 +47,28 @@ void setup() {
       steeringMotor->setSpeed(position);
   });
 
-  // controller->onButtonPressed(PS2_LEFT_1, [](){ 
-  //   int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
-  //   int newLimit = driveMotorSpeedLimitSelector.decrease();
-  //   if(newLimit != oldLimit) controller->vibrate(150, 128);
-  //   driveMotor->setSpeedLimit(newLimit);
-  // });
+  controller->onButtonPressed(PS2_LEFT_1, [](){ 
+    Serial.println("Speed Limit Decreased");
+    controller->vibrate(100, 128);
+  });
 
-  // controller->onButtonPressed(PS2_RIGHT_1, [](){ 
-  //   int oldLimit = driveMotorSpeedLimitSelector.currentLimit();
-  //   int newLimit = driveMotorSpeedLimitSelector.increase();
-  //   if(newLimit != oldLimit) controller->vibrate(150, 128);
-  //   driveMotor->setSpeedLimit(newLimit);
-  // });
+  controller->onButtonPressed(PS2_RIGHT_1, [](){ 
+    Serial.println("Speed Limit Increased");
+    controller->vibrate(100, 128);
+  });
 
-  // controller->onButtonPressed(PS2_LEFT_2, [](){ 
-  //   double oldRate = driveMotorRampingSelector.currentRate();
-  //   double newRate = driveMotorRampingSelector.decrease();
-  //   if(newRate != oldRate) controller->vibrate(150, 128);
-  //   driveMotor->setRampingRate(newRate);
-  // });
+  controller->onButtonPressed(PS2_LEFT_2, [](){ 
+    Serial.println("Acceleration Ramp Rate Decreased");
+    controller->vibrate(100, 128);
+  });
 
-  // controller->onButtonPressed(PS2_RIGHT_2, [](){ 
-  //   double oldRate = driveMotorRampingSelector.currentRate();
-  //   double newRate = driveMotorRampingSelector.increase();
-  //   if(newRate != oldRate) controller->vibrate(150, 128);
-  //   driveMotor->setRampingRate(newRate);
-  // });
+  controller->onButtonPressed(PS2_RIGHT_2, [](){ 
+    Serial.println("Acceleration Ramp Rate Increased");
+    controller->vibrate(100, 128);
+  });
 
   controller->onButtonPressed(PS2_TRIANGLE, [](){ 
+    Serial.println("Emergency Stop Toggled");
     driveMotor->toggleEmergencyStop();
     controller->vibrate(200, 128);
   });
@@ -93,7 +77,6 @@ void setup() {
     throttle->toggleDisableSecondary();
     controller->vibrate(200, 128);
   });
-
 
   delay(200);
   Serial.println("Init Complete");
