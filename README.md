@@ -1,12 +1,12 @@
 # TODO
 
 ## Needed
-- Speed selector doesn't ramp down correctly
 - Implement ramping selector better
 - Physical kill switch
 - F/R selector
 - Arduino mount
 - Spare fuses in car
+- Spare remote batteries in car
 
 
 ## Nice to have

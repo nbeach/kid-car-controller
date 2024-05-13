@@ -10,13 +10,11 @@ DriveMotor::DriveMotor(AbstractMotor* motor) {
 
 void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
-    Serial.println("speed: " + String(speed));
     if(speed < 0) {
         limitedSpeed = isAboveLimit(speed) ? speedLimit * -1 : speed;
     } else {
         limitedSpeed = isAboveLimit(speed) ? speedLimit : speed;
     }
-    Serial.println("limitedSpeed: " + String(limitedSpeed));
 
     if(emergencyStopEnabled) {
         Serial.println("Emergency stop enabled. Ignoring speed change.");
@@ -32,6 +30,10 @@ bool DriveMotor::isAboveLimit(int speed) {
 void DriveMotor::setSpeedLimit(int limit) {
     speedLimit = limit;
     setSpeed(commandedSpeed);
+}
+
+void DriveMotor::setAccelerationRamping(double rate) {
+    speedRamper->setAccelerationRate(rate);
 }
 
 void DriveMotor::tick() {

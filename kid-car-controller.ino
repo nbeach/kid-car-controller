@@ -9,6 +9,7 @@
 #include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/selection/SpeedLimitSelector.h"
+#include "src/selection/AccelerationRampingSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
 
@@ -16,6 +17,7 @@ WirelessController* controller;
 PriorityCompositeThrottle* throttle;
 
 SpeedLimitSelector* speedLimitSelector;
+AccelerationRampingSelector* accelerationRampingSelector;
 
 Motor* steeringMotor;
 DriveMotor* driveMotor;
@@ -69,14 +71,22 @@ void setup() {
   });
 
   //Acceleration Ramp Rate
+  accelerationRampingSelector = new AccelerationRampingSelector();
+  driveMotor->setAccelerationRamping(accelerationRampingSelector->currentSetting());
+
+  accelerationRampingSelector->onChange([](double rate){
+    Serial.println("Acceleration Ramping: " + String(rate));
+    driveMotor->setAccelerationRamping(rate);
+  });
+
   controller->onButtonPressed(PS2_LEFT_2, [](){ 
-    Serial.println("Acceleration Ramp Rate Decreased");
-    controller->vibrate(100, 128);
+    bool changed = accelerationRampingSelector->decrease();
+    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
   });
 
   controller->onButtonPressed(PS2_RIGHT_2, [](){ 
-    Serial.println("Acceleration Ramp Rate Increased");
-    controller->vibrate(100, 128);
+    bool changed = accelerationRampingSelector->increase();
+    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
   });
 
   //Emergency Stop

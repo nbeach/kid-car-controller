@@ -20,6 +20,7 @@ class DriveMotor : public AbstractMotor {
         DriveMotor(AbstractMotor* motor);
         void setSpeed(int speed);
         void setSpeedLimit(int limit);
+        void setAccelerationRamping(double rate);
         bool toggleEmergencyStop();
         void tick();
 };
