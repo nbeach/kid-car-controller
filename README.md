@@ -1,7 +1,6 @@
 # TODO
 
 ## Needed
-- Implement ramping selector better
 - Physical kill switch
 - F/R selector
 - Arduino mount
@@ -16,6 +15,7 @@
 ## Code stuff
 - A true composite motor class
 - Logging class
+- Generic selector class
 - Destructors/Actual memory managment
 - better controller vibration abstraction
 - callback type module
