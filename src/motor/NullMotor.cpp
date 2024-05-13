@@ -1,6 +1,7 @@
 #include "NullMotor.h"
 #include <SoftwareSerial.h>
 
-void NullMotor::setSpeed(int speed) {
+int NullMotor::setSpeed(int speed) {
     Serial.println("Commanded Speed: " + String(speed));
+    return 0;
 }

@@ -32,6 +32,11 @@ void setup() {
   //Steering Motor
   steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
 
+  controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
+    Serial.println("Steering Position: " + String(position));
+    steeringMotor->setSpeed(position);
+  });
+
   // Wirless Controller
   controller = new WirelessController(8, 9);
 
@@ -52,6 +57,7 @@ void setup() {
   speedLimitSelector->onChange([](int speed){
     Serial.println("Speed Limit: " + String(speed));
     driveMotor->setSpeedLimit(speed);
+    driveMotor->setSpeed(throttle->getPosition());
   });
 
   controller->onButtonPressed(PS2_LEFT_1, [](){
@@ -64,16 +70,7 @@ void setup() {
     controller->vibrate(changed ? 250 : 175, changed ? 200 : 100);
   });
 
-
-
-
-  controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){ 
-      Serial.println("Steering Position: " + String(position));
-      steeringMotor->setSpeed(position);
-  });
-
-
-
+  //Acceleration Ramp Rate
   controller->onButtonPressed(PS2_LEFT_2, [](){ 
     Serial.println("Acceleration Ramp Rate Decreased");
     controller->vibrate(100, 128);
@@ -84,12 +81,14 @@ void setup() {
     controller->vibrate(100, 128);
   });
 
+  //Emergency Stop
   controller->onButtonPressed(PS2_TRIANGLE, [](){
     bool stopped = driveMotor->toggleEmergencyStop();
     Serial.println("Emergency Stop Enabled: " + String(stopped));
     controller->vibrate(stopped ? 250 : 175, stopped ? 200 : 100);
   });
 
+  //Secondary Throttle Disable
   controller->onButtonPressed(PS2_SQUARE, [](){ 
     bool disabled = throttle->toggleDisableSecondary();
     Serial.println("Throttle Pedal Disabled: " + String(disabled));

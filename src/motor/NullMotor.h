@@ -6,7 +6,7 @@
 
 class NullMotor : public AbstractMotor {
     public:
-        void setSpeed(int speed);
+        int setSpeed(int speed);
 };
 
 #endif

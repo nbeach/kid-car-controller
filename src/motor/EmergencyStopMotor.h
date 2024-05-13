@@ -12,7 +12,7 @@ class EmergencyStopMotor : public AbstractMotor {
 
     public:
         EmergencyStopMotor(AbstractMotor* baseMotor);
-        void setSpeed(int speed);
+        int setSpeed(int speed);
         bool toggleEmergencyStop();
 };
 

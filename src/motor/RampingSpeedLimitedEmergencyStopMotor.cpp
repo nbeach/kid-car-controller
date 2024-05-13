@@ -7,8 +7,8 @@ RampingSpeedLimitedEmergencyStopMotor::RampingSpeedLimitedEmergencyStopMotor(dou
     this->rampingMotor = new RampingMotor(rampingRate, this->speedLimitedMotor);
 }
 
-void RampingSpeedLimitedEmergencyStopMotor::setSpeed(int speed) {
-    this->rampingMotor->setSpeed(speed);
+int RampingSpeedLimitedEmergencyStopMotor::setSpeed(int speed) {
+    return this->rampingMotor->setSpeed(speed);
 }
 
 void RampingSpeedLimitedEmergencyStopMotor::setRampingRate(double rampingRate) {

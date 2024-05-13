@@ -5,7 +5,7 @@
 
 class AbstractMotor {
     public:
-        virtual void setSpeed(int speed);
+        virtual int setSpeed(int speed);
 };
 
 #endif

@@ -5,10 +5,10 @@ EmergencyStopMotor::EmergencyStopMotor(AbstractMotor* baseMotor) {
     this->baseMotor = baseMotor;
 }
 
-void EmergencyStopMotor::setSpeed(int speed) {
+int EmergencyStopMotor::setSpeed(int speed) {
     lastCommandedSpeed = speed;
     if(speed != 0 && stop) Serial.println("Speed Change Ignored. Emergency Stop Enabled.");
-    baseMotor->setSpeed(stop ? 0 : speed);
+    return baseMotor->setSpeed(stop ? 0 : speed);
 }
 
 bool EmergencyStopMotor::toggleEmergencyStop() {

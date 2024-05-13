@@ -11,7 +11,7 @@ class Motor : public AbstractMotor {
 
     public:
         Motor(int pin1, int pin2);
-        void setSpeed(int speed);
+        int setSpeed(int speed);
 };
 
 #endif

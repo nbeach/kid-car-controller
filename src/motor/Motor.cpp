@@ -7,9 +7,10 @@ Motor::Motor(int pin1, int pin2) {
     motor = new CytronMD(PWM_DIR, pin1, pin2);
 }
 
-void Motor::setSpeed(int speed) {
+int Motor::setSpeed(int speed) {
     Serial.println("Commanded Speed: " + String(speed));
     motor->setSpeed(speed);
+    return speed;
 }
 
 
