@@ -1,18 +1,20 @@
 # TODO
 
 ## Needed
-- Speed selector doesn't ramp down from 256 or work for reverse?
+- Speed selector doesn't ramp down correctly
 - Implement ramping selector better
 - Physical kill switch
 - F/R selector
 - Arduino mount
+- Spare fuses in car
 
 
 ## Nice to have
-- Ramping tweaks
+- Motor heatsinks
 
 
 ## Code stuff
 - A true composite motor class
 - Logging class
 - Destructors/Actual memory managment
+- better controller vibration abstraction

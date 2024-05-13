@@ -9,7 +9,6 @@
 #include "src/motor/RampingMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/motor/RampingSpeedLimitedEmergencyStopMotor.h"
-#include "src/selection/RampingSelector.h"
 #include "src/selection/SpeedLimitSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
@@ -25,6 +24,9 @@ RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 void setup() {
   Serial.begin(115200);
 
+  // Wirless Controller
+  controller = new WirelessController(8, 9);
+
   //Drive Motor
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
   driveMotor = new RampingSpeedLimitedEmergencyStopMotor(0.001, baseMotor);
@@ -36,9 +38,6 @@ void setup() {
     Serial.println("Steering Position: " + String(position));
     steeringMotor->setSpeed(position);
   });
-
-  // Wirless Controller
-  controller = new WirelessController(8, 9);
 
   //Throttle
   WirelessControllerThrottle* controllerThrottle = new WirelessControllerThrottle(controller, PS2_JOYSTICK_RIGHT_Y_AXIS);
@@ -62,12 +61,12 @@ void setup() {
 
   controller->onButtonPressed(PS2_LEFT_1, [](){
     bool changed = speedLimitSelector->decrease();
-    controller->vibrate(changed ? 250 : 175, changed ? 200 : 100);
+    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
   });
 
   controller->onButtonPressed(PS2_RIGHT_1, [](){
     bool changed = speedLimitSelector->increase();
-    controller->vibrate(changed ? 250 : 175, changed ? 200 : 100);
+    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
   });
 
   //Acceleration Ramp Rate

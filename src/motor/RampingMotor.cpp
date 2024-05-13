@@ -9,7 +9,7 @@ int RampingMotor::setCurrentSpeed(int speed) {
 }
 
 void RampingMotor::stepTowardsTargetSpeed() {
-  if(currentSpeed == targetSpeed) return;
+  //if(currentSpeed == targetSpeed) return;
   bool isAcceleratingForward = (targetSpeed > 0) && (currentSpeed < targetSpeed);
   bool isAcceleratingBackward = (targetSpeed < 0) && (currentSpeed > targetSpeed);
   bool isDeceleratingFromReverse = (currentSpeed < 0) && (targetSpeed > currentSpeed);
