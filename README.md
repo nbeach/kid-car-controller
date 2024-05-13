@@ -18,3 +18,4 @@
 - Logging class
 - Destructors/Actual memory managment
 - better controller vibration abstraction
+- callback type module

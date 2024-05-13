@@ -6,9 +6,8 @@
 #include "src/control/WirelessControllerThrottle.h"
 #include "src/motor/NullMotor.h"
 #include "src/motor/Motor.h"
-#include "src/motor/RampingMotor.h"
+#include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
-#include "src/motor/RampingSpeedLimitedEmergencyStopMotor.h"
 #include "src/selection/SpeedLimitSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
@@ -18,8 +17,8 @@ PriorityCompositeThrottle* throttle;
 
 SpeedLimitSelector* speedLimitSelector;
 
-RampingMotor* steeringMotor;
-RampingSpeedLimitedEmergencyStopMotor* driveMotor;
+Motor* steeringMotor;
+DriveMotor* driveMotor;
 
 void setup() {
   Serial.begin(115200);
@@ -29,10 +28,11 @@ void setup() {
 
   //Drive Motor
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
-  driveMotor = new RampingSpeedLimitedEmergencyStopMotor(0.001, baseMotor);
+  driveMotor = new DriveMotor(baseMotor);
 
   //Steering Motor
-  steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
+  //steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
+  steeringMotor = new Motor(11, 13);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
     Serial.println("Steering Position: " + String(position));
@@ -56,7 +56,6 @@ void setup() {
   speedLimitSelector->onChange([](int speed){
     Serial.println("Speed Limit: " + String(speed));
     driveMotor->setSpeedLimit(speed);
-    driveMotor->setSpeed(throttle->getPosition());
   });
 
   controller->onButtonPressed(PS2_LEFT_1, [](){
@@ -89,7 +88,7 @@ void setup() {
 
   //Secondary Throttle Disable
   controller->onButtonPressed(PS2_SQUARE, [](){ 
-    bool disabled = throttle->toggleDisableSecondary();
+    bool disabled = false; //throttle->toggleDisableSecondary();
     Serial.println("Throttle Pedal Disabled: " + String(disabled));
     controller->vibrate(disabled ? 250 : 175, disabled ? 200 : 100);
   });

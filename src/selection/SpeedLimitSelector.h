@@ -2,7 +2,6 @@
 #define SpeedLimitSelector_h
 
 #include "Arduino.h"
-#include "../motor/RampingSpeedLimitedEmergencyStopMotor.h"
 
 typedef void(*speedLimitSelectorCallback)(int);
 
