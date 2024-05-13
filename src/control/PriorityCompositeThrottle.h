@@ -20,7 +20,7 @@ class PriorityCompositeThrottle : public AbstractThrottle {
         void onPositionChange(void (*func)(int));
         int getPosition();
         void poll();
-        void toggleDisableSecondary();
+        bool toggleDisableSecondary();
 };
 
 #endif

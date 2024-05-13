@@ -27,6 +27,7 @@ void PriorityCompositeThrottle::poll() {
     }
 }
 
-void PriorityCompositeThrottle::toggleDisableSecondary() {
+bool PriorityCompositeThrottle::toggleDisableSecondary() {
     secondaryDisabled = !secondaryDisabled;
+    return secondaryDisabled;
 }

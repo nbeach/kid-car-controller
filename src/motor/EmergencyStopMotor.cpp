@@ -17,7 +17,6 @@ bool EmergencyStopMotor::toggleEmergencyStop() {
         return stop;
     }
     stop = !stop;
-    Serial.println("Emergency Stop Enabled: " + String(stop));
     if(stop) baseMotor->setSpeed(0);
     return stop;
 }

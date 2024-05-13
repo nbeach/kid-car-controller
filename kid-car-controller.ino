@@ -67,15 +67,16 @@ void setup() {
     controller->vibrate(100, 128);
   });
 
-  controller->onButtonPressed(PS2_TRIANGLE, [](){ 
-    Serial.println("Emergency Stop Toggled");
-    driveMotor->toggleEmergencyStop();
-    controller->vibrate(200, 128);
+  controller->onButtonPressed(PS2_TRIANGLE, [](){
+    bool stopped = driveMotor->toggleEmergencyStop();
+    Serial.println("Emergency Stop Enabled: " + String(stopped));
+    controller->vibrate(stopped ? 250 : 175, stopped ? 200 : 100);
   });
 
   controller->onButtonPressed(PS2_SQUARE, [](){ 
-    throttle->toggleDisableSecondary();
-    controller->vibrate(200, 128);
+    bool disabled = throttle->toggleDisableSecondary();
+    Serial.println("Throttle Pedal Disabled: " + String(disabled));
+    controller->vibrate(disabled ? 250 : 175, disabled ? 200 : 100);
   });
 
   delay(200);
