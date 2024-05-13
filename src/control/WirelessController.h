@@ -21,7 +21,7 @@ class WirelessController {
   int to256Position(int rawPosition);
 
   public:
-  WirelessController(int pin1, int pin2);
+  WirelessController(int pin1, int pin2, int baud);
   void poll();
   void pollButtonState(int button);
   void pollAxisState(int axis);

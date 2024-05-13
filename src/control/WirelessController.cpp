@@ -18,7 +18,7 @@ int WirelessController::to256Position(int rawPosition) {
 }
 
 
-WirelessController::WirelessController(int pin1, int pin2) {
+WirelessController::WirelessController(int pin1, int pin2, int baud) {
   for(int i = 0; i < 26; i++) {
     buttonStates[i] = 1;
     axisStates[i] = 0;
@@ -27,7 +27,7 @@ WirelessController::WirelessController(int pin1, int pin2) {
   }
   for(int i = 0; i < 26; i++) { }
   ps2 = Cytron_PS2Shield(pin1, pin2);
-  ps2.begin(9600);
+  ps2.begin(baud);
 }
 
 void WirelessController::poll() {
