@@ -8,7 +8,7 @@ class RampingMotor : public AbstractMotor {
     private:
         AbstractMotor* baseMotor;
 
-        double rampingRate = 0.001;
+        double rampingRate;
         double decelerationRampingRate = 0.001;
         int initialSpeed = 0;
         int currentSpeed = 0;
@@ -19,7 +19,7 @@ class RampingMotor : public AbstractMotor {
         void stepTowardsTargetSpeed();
 
     public:
-        RampingMotor(AbstractMotor* baseMotor);
+        RampingMotor(double rampingRate, AbstractMotor* baseMotor);
         void setSpeed(int speed);
         void setRampingRate(double rampingRate);
         void tick();

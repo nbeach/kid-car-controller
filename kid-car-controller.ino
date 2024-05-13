@@ -5,9 +5,10 @@
 #include "src/control/PriorityCompositeThrottle.h"
 #include "src/control/WirelessControllerThrottle.h"
 #include "src/motor/NullMotor.h"
+#include "src/motor/Motor.h"
+#include "src/motor/RampingMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/motor/RampingSpeedLimitedEmergencyStopMotor.h"
-#include "src/motor/Motor.h"
 #include "src/selection/RampingSelector.h"
 #include "src/selection/SpeedLimitSelector.h"
 
@@ -16,7 +17,7 @@ const int DISABLE_DRIVE_MOTORS = false;
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
 
-Motor* steeringMotor;
+RampingMotor* steeringMotor;
 RampingSpeedLimitedEmergencyStopMotor* driveMotor;
 
 void setup() {
@@ -31,11 +32,11 @@ void setup() {
   throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
 
   //Steering Motor
-  steeringMotor = new Motor(11, 13);
+  steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
 
   //Drive Motor
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
-  driveMotor = new RampingSpeedLimitedEmergencyStopMotor(baseMotor);
+  driveMotor = new RampingSpeedLimitedEmergencyStopMotor(0.001, baseMotor);
 
   throttle->onPositionChange([](int position){
       Serial.println("Throttle Position: " + String(position));

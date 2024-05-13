@@ -34,8 +34,9 @@ void RampingMotor::stepTowardsTargetSpeed() {
 }
 
 
-RampingMotor::RampingMotor(AbstractMotor* baseMotor) {
+RampingMotor::RampingMotor(double rampingRate, AbstractMotor* baseMotor) {
   this->baseMotor = baseMotor;
+  this->rampingRate = rampingRate;
 }
 
 void RampingMotor::setSpeed(int speed) {

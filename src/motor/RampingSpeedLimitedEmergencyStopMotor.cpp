@@ -1,10 +1,10 @@
 #include "RampingSpeedLimitedEmergencyStopMotor.h"
 #include "Arduino.h"
 
-RampingSpeedLimitedEmergencyStopMotor::RampingSpeedLimitedEmergencyStopMotor(AbstractMotor* baseMotor) {
+RampingSpeedLimitedEmergencyStopMotor::RampingSpeedLimitedEmergencyStopMotor(double rampingRate, AbstractMotor* baseMotor) {
     this->emergencyStopMotor = new EmergencyStopMotor(baseMotor);
     this->speedLimitedMotor = new SpeedLimitedMotor(this->emergencyStopMotor);
-    this->rampingMotor = new RampingMotor(this->speedLimitedMotor);
+    this->rampingMotor = new RampingMotor(rampingRate, this->speedLimitedMotor);
 }
 
 void RampingSpeedLimitedEmergencyStopMotor::setSpeed(int speed) {
