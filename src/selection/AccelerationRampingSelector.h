@@ -9,7 +9,8 @@ class AccelerationRampingSelector {
     private:
         accelerationRampingSelectorCallback callback;
         int settingCount = 5;
-        double settings[5] = { 0.0001, 0.0003, 0.001, 0.005, 0.1 };
+        // Graphed https://www.desmos.com/calculator/hmvl2r0fbx
+        double settings[5] = { 0.00001, 0.00003, 0.0001, 0.0005, 0.01 };
         int currentSettingIndex = 2;
         void emitChange();
 
