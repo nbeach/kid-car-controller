@@ -8,7 +8,6 @@ Motor::Motor(int pin1, int pin2) {
 }
 
 void Motor::setSpeed(int speed) {
-    Serial.println("Commanded Speed: " + String(speed));
     motor->setSpeed(speed);
 }
 

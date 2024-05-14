@@ -13,8 +13,6 @@
 
 const int DISABLE_DRIVE_MOTORS = false;
 
-const int SERIAL_BAUD = 115200;
-
 const int STEERING_MOTOR_PIN_1 = 11;
 const int STEERING_MOTOR_PIN_2 = 13;
 
@@ -22,6 +20,7 @@ const int CONTROLLER_PIN_1 = 8;
 const int CONTROLLER_PIN_2 = 9;
 const int CONTROLLER_BAUD = 9600;
 
+const int DRIVE_MOTOR_COUNT = 4;
 const int REAR_LEFT_MOTOR_PIN_1 = 3;
 const int REAR_LEFT_MOTOR_PIN_2 = 2;
 const int REAR_RIGHT_MOTOR_PIN_1 = 6;
@@ -38,20 +37,29 @@ SpeedLimitSelector* speedLimitSelector;
 AccelerationRampingSelector* accelerationRampingSelector;
 
 Motor* steeringMotor;
+
 DriveMotor* driveMotor;
 
 void setup() {
-  Serial.begin(SERIAL_BAUD);
-
+  Serial.begin(115200);
+  
   // Wirless Controller
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
 
   //Drive Motor
-  AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS ? (AbstractMotor*)new NullMotor() : (AbstractMotor*)new CompositeMotor();
+  AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT];
+  motors[0] = new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2);
+  motors[1] = new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2);
+  motors[2] = new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2);
+  motors[3] = new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2);
+
+  AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
+    ? (AbstractMotor*)new NullMotor()
+    : (AbstractMotor*)new CompositeMotor(motors, DRIVE_MOTOR_COUNT);
+
   driveMotor = new DriveMotor(baseMotor);
 
   //Steering Motor
-  //steeringMotor = new RampingMotor(0.001, (AbstractMotor*)new Motor(11, 13));
   steeringMotor = new Motor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){

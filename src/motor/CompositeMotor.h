@@ -3,16 +3,14 @@
 
 #include "Arduino.h"
 #include "AbstractMotor.h"
-#include "../vendor/CytronMotorDriver.h"
 
 class CompositeMotor : public AbstractMotor {
     private:
-        CytronMD frontLeftMotor = CytronMD(PWM_DIR, 5, 4);
-        CytronMD frontRightMotor = CytronMD(PWM_DIR, 10, 12);
-        CytronMD rearLeftMotor = CytronMD(PWM_DIR, 3, 2);
-        CytronMD rearRightMotor = CytronMD(PWM_DIR, 6, 7);
+        AbstractMotor** motors;
+        int count;
 
     public:
+        CompositeMotor(AbstractMotor** motors, int count);
         void setSpeed(int speed);
 };
 
