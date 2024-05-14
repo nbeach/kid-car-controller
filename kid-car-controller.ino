@@ -20,6 +20,10 @@ const int CONTROLLER_PIN_1 = 8;
 const int CONTROLLER_PIN_2 = 9;
 const int CONTROLLER_BAUD = 9600;
 
+const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = 0;
+const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = 1;
+const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = 2;
+
 const int DRIVE_MOTOR_COUNT = 4;
 const int REAR_LEFT_MOTOR_PIN_1 = 3;
 const int REAR_LEFT_MOTOR_PIN_2 = 2;
@@ -69,7 +73,12 @@ void setup() {
 
   //Throttle
   WirelessControllerThrottle* controllerThrottle = new WirelessControllerThrottle(controller, PS2_JOYSTICK_RIGHT_Y_AXIS);
-  ThrottlePedal* pedal = new ThrottlePedal(0, 1, 2);
+  ThrottlePedal* pedal = new ThrottlePedal(
+    THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN,
+    THROTTLE_PEDAL_FORWARD_ANALOG_PIN,
+    THROTTLE_PEDAL_REVERSE_ANALOG_PIN
+  );
+
   throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
 
   throttle->onPositionChange([](int position){
