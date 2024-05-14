@@ -49,7 +49,7 @@ bool DriveMotor::toggleEmergencyStop() {
         speedRamper->setTargetSpeed(0);
         speedRamper->setCurrentSpeed(0);
     } else {
-        speedRamper->setTargetSpeed(limitedSpeed);
+        setSpeed(commandedSpeed);
     }
     return emergencyStopEnabled;
 }
