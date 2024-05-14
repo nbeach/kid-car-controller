@@ -4,16 +4,13 @@
 #include "Arduino.h"
 #include "../vendor/Cytron_PS2Shield.h"
 
-typedef void(*buttonCallback)();
-typedef void(*axisCallback)(int);
-
 class WirelessController {
   protected:
   Cytron_PS2Shield ps2;
   int buttonStates[26];
   int axisStates[26];
-  buttonCallback buttonCallbacks[26];
-  axisCallback axisCallbacks[26];
+  void (*buttonCallbacks[26])();
+  void (*axisCallbacks[26])(int);
   int vibrationStartedTime = -1;
   int vibrationDuration = 0;
 

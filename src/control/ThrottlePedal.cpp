@@ -7,7 +7,6 @@ ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
     this->throttlePin = throttlePin;
     this->forwardPin = forwardPin;
     this->reversePin = reversePin;
-    this->callback = NULL;
 
     int positionAtInit = getPosition();
     if(positionAtInit != 0) {

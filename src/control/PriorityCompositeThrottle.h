@@ -4,13 +4,11 @@
 #include "Arduino.h"
 #include "AbstractThrottle.h"
 
-typedef void(*priorityCompositeThrottleCallback)(int);
-
 class PriorityCompositeThrottle : public AbstractThrottle {
     private:
     AbstractThrottle* primary;
     AbstractThrottle* secondary;
-    priorityCompositeThrottleCallback callback = NULL;
+    void (*callback)(int) = NULL;
     bool secondaryDisabled = true;
 
     int priorPosition = 0;

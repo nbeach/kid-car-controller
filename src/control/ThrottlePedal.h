@@ -4,8 +4,6 @@
 #include "Arduino.h"
 #include "AbstractThrottle.h"
 
-typedef void(*throttleCallback)(int);
-
 class ThrottlePedal : public AbstractThrottle {
     private:
         int throttlePin;
@@ -13,7 +11,6 @@ class ThrottlePedal : public AbstractThrottle {
         int reversePin;
         int lastThrottlePosition = 0;
         int direction = 1;
-        throttleCallback callback;
         int fault = false;
 
     public:

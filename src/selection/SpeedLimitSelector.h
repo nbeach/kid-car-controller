@@ -3,11 +3,9 @@
 
 #include "Arduino.h"
 
-typedef void(*speedLimitSelectorCallback)(int);
-
 class SpeedLimitSelector {
     private:
-        speedLimitSelectorCallback callback;
+        void (*callback)(int);
         int speedLimitCount = 5;
         int speedLimits[5] = { 64, 88, 112, 184, 256 };
         int currentSpeedLimitIndex = 2;

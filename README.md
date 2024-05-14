@@ -13,4 +13,3 @@
 - Generic selector class
 - Destructors/Actual memory management
 - better controller vibration abstraction
-- callback type module
