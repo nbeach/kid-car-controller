@@ -8,10 +8,17 @@
 #include "src/motor/Motor.h"
 #include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
-#include "src/selection/SpeedLimitSelector.h"
-#include "src/selection/AccelerationRampingSelector.h"
+#include "src/selection/SettingSelector.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
+
+const int SPEED_LIMIT_COUNT = 5;
+const int SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 64, 88, 112, 184, 256 };
+const int SPEED_LIMITS_DEFAULT_INDEX = 2;
+
+const int ACCELERATION_RAMPING_RATE_COUNT = 5;
+const int ACCELERATION_RAMPING_RATES = new double[ACCELERATION_RAMPING_RATE_COUNT] { 0.00001, 0.00003, 0.0001, 0.0005, 0.01 };
+const int ACCELERATION_RAMPING_RATE_DEFAULT_INDEX = 2;
 
 const int STEERING_MOTOR_PIN_1 = 11;
 const int STEERING_MOTOR_PIN_2 = 13;
@@ -37,8 +44,8 @@ const int FRONT_RIGHT_MOTOR_PIN_2 = 12;
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
 
-SpeedLimitSelector* speedLimitSelector;
-AccelerationRampingSelector* accelerationRampingSelector;
+SettingSelector<int>* speedLimitSelector;
+SettingSelector<double>* accelerationRampingSelector;
 
 Motor* steeringMotor;
 DriveMotor* driveMotor;
@@ -50,11 +57,12 @@ void setup() {
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
 
   //Drive Motor
-  AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT];
-  motors[0] = new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2);
-  motors[1] = new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2);
-  motors[2] = new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2);
-  motors[3] = new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2);
+  AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
+    new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2),
+    new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2),
+    new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2),
+    new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2)
+  };
 
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
     ? (AbstractMotor*)new NullMotor()
@@ -86,8 +94,8 @@ void setup() {
   });
 
   //Speed Limit Selector
-  speedLimitSelector = new SpeedLimitSelector();
-  driveMotor->setSpeedLimit(speedLimitSelector->currentLimit());
+  speedLimitSelector = new SettingSelector<int>(SPEED_LIMITS, SPEED_LIMIT_COUNT, SPEED_LIMITS_DEFAULT_INDEX);
+  driveMotor->setSpeedLimit(speedLimitSelector->currentSetting());
 
   speedLimitSelector->onChange([](int speed){
     Serial.println("Speed Limit: " + String(speed));
@@ -105,7 +113,11 @@ void setup() {
   });
 
   //Acceleration Ramp Rate
-  accelerationRampingSelector = new AccelerationRampingSelector();
+  accelerationRampingSelector = new SettingSelector<double>(
+    ACCELERATION_RAMPING_RATES,
+    ACCELERATION_RAMPING_RATE_COUNT,
+    ACCELERATION_RAMPING_RATE_DEFAULT_INDEX
+  );
   driveMotor->setAccelerationRamping(accelerationRampingSelector->currentSetting());
 
   accelerationRampingSelector->onChange([](double rate){

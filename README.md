@@ -8,6 +8,5 @@
 
 
 ## Code
-- Generic selector class
 - Destructors/Actual memory management?
 
