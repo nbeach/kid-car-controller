@@ -8,6 +8,10 @@ ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
     this->forwardPin = forwardPin;
     this->reversePin = reversePin;
 
+    pinMode(throttlePin, INPUT);
+    pinMode(forwardPin, INPUT);
+    pinMode(reversePin, INPUT);
+
     int positionAtInit = getPosition();
     if(positionAtInit != 0) {
         fault = true;
@@ -17,16 +21,17 @@ ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
 
 int ThrottlePedal::throttlePosition() {
     int pinValue = analogRead(throttlePin);
-    int withZeroMinimum = pinValue < 175 ? 0 : pinValue - 175;
+    int withZeroMinimum = pinValue < 250 ? 0 : pinValue - 250;
     int withClippedMaximum = withZeroMinimum > 500 ? 500 : withZeroMinimum;
     int throttlePosition = (withClippedMaximum / 5) * 2.56;
+
     return throttlePosition;
 }
 
 int ThrottlePedal::direction() {
-    if(analogRead(forwardPin) > 100) {
+    if(analogRead(forwardPin) < 735) {
         return 1;
-    } else if(analogRead(reversePin) > 100) {
+    } else if(analogRead(reversePin) < 735) {
         return -1;
     } else {
         return 0;

@@ -27,9 +27,9 @@ const int CONTROLLER_PIN_1 = 8;
 const int CONTROLLER_PIN_2 = 9;
 const int CONTROLLER_BAUD = 9600;
 
-const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = 0;
-const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = 1;
-const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = 2;
+const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
+const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A1;
+const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
 const int DRIVE_MOTOR_COUNT = 4;
 const int REAR_LEFT_MOTOR_PIN_1 = 3;
@@ -149,7 +149,6 @@ void setup() {
     controller->vibrate(disabled ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
 
-  delay(200);
   Serial.println("Init Complete");
 }
 

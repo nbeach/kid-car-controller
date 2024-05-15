@@ -9,7 +9,7 @@ class PriorityCompositeThrottle : public AbstractThrottle {
     AbstractThrottle* primary;
     AbstractThrottle* secondary;
     void (*callback)(int) = NULL;
-    bool secondaryDisabled = true;
+    bool secondaryDisabled = false;
 
     int priorPosition = 0;
 
