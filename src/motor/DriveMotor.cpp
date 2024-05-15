@@ -45,7 +45,15 @@ void DriveMotor::tick() {
     int priorSpeed = speedRamper->getCurrentSpeed();
     speedRamper->tick();
     int speed = speedRamper->getCurrentSpeed();
-    if(speed != priorSpeed) motor->setSpeed(speed);
+
+    if(emergencyStopEnabled) {
+        speedRamper->setTargetSpeed(0);
+        speedRamper->setCurrentSpeed(0);
+        motor->setSpeed(0);
+    } else if(speed != priorSpeed)  {
+        motor->setSpeed(speed);
+    }
+
 }
 
 bool DriveMotor::toggleEmergencyStop() {
@@ -53,6 +61,7 @@ bool DriveMotor::toggleEmergencyStop() {
     if(emergencyStopEnabled) {
         speedRamper->setTargetSpeed(0);
         speedRamper->setCurrentSpeed(0);
+        motor->setSpeed(0);
     } else {
         setSpeed(commandedSpeed);
     }
