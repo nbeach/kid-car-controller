@@ -11,6 +11,7 @@ class Motor : public AbstractMotor {
 
     public:
         Motor(int pin1, int pin2);
+        ~Motor();
         void setSpeed(int speed);
 };
 

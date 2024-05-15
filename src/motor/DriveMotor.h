@@ -18,6 +18,7 @@ class DriveMotor : public AbstractMotor {
 
     public:
         DriveMotor(AbstractMotor* motor);
+        ~DriveMotor();
         void setSpeed(int speed);
         void setSpeedLimit(int limit);
         void setAccelerationRamping(double rate);

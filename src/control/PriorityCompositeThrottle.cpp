@@ -7,6 +7,11 @@ PriorityCompositeThrottle::PriorityCompositeThrottle(AbstractThrottle* primary, 
     this->secondary = secondary;
 }
 
+PriorityCompositeThrottle::~PriorityCompositeThrottle() {
+    delete primary;
+    delete secondary;
+}
+
 void PriorityCompositeThrottle::onPositionChange(void (*callback)(int)) {
     this->callback = callback;
 }

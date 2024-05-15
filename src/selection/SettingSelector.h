@@ -14,6 +14,7 @@ private:
 
 public:
     SettingSelector(T* settings, int count, int defaultIndex);
+    ~SettingSelector();
     void onChange(void (*func)(T));
     bool increase();
     bool decrease();
@@ -24,6 +25,10 @@ template <typename T> SettingSelector<T>::SettingSelector(T* settings, int count
     this->settings = settings;
     this->settingCount = count;
     this->currentSettingIndex = defaultIndex;
+}
+
+template <typename T> SettingSelector<T>::~SettingSelector() {
+    delete[] settings;
 }
 
 template <typename T> void SettingSelector<T>::onChange(void (*callback)(T)) {

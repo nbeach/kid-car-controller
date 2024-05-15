@@ -12,6 +12,7 @@ class WirelessControllerThrottle : public AbstractThrottle {
 
     public:
         WirelessControllerThrottle(WirelessController* controller, int throttleAxis);
+        ~WirelessControllerThrottle();
         int getPosition();
 };
 

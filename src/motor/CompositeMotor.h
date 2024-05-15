@@ -11,6 +11,7 @@ class CompositeMotor : public AbstractMotor {
 
     public:
         CompositeMotor(AbstractMotor** motors, int count);
+        ~CompositeMotor();
         void setSpeed(int speed);
 };
 

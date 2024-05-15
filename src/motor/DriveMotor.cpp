@@ -8,6 +8,11 @@ DriveMotor::DriveMotor(AbstractMotor* motor) {
     speedRamper = new SpeedRamper(0.001, 0.001);
 }
 
+DriveMotor::~DriveMotor() {
+    delete motor;
+    delete speedRamper;
+}
+
 void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
     if(speed < 0) {

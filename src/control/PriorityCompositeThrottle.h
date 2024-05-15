@@ -15,6 +15,7 @@ class PriorityCompositeThrottle : public AbstractThrottle {
 
     public:
         PriorityCompositeThrottle(AbstractThrottle* primary, AbstractThrottle* secondary);
+        ~PriorityCompositeThrottle();
         void onPositionChange(void (*func)(int));
         int getPosition();
         void poll();

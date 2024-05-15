@@ -7,6 +7,10 @@ WirelessControllerThrottle::WirelessControllerThrottle(WirelessController* contr
     this->throttleAxis = throttleAxis;
 }
 
+WirelessControllerThrottle::~WirelessControllerThrottle() {
+    delete controller;
+}
+
 int WirelessControllerThrottle::getPosition() {
     return controller->getAxisState(throttleAxis);
 }

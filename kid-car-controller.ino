@@ -144,7 +144,7 @@ void setup() {
 
   //Secondary Throttle Disable
   controller->onButtonPressed(PS2_SQUARE, [](){ 
-    bool disabled = false; //throttle->toggleDisableSecondary();
+    bool disabled = throttle->toggleDisableSecondary();
     Serial.println("Throttle Pedal Disabled: " + String(disabled));
     controller->vibrate(disabled ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
