@@ -97,9 +97,10 @@ void WirelessController::onAxisChange(int axis, void (*func)(int)) {
    axisCallbacks[axis] = func;
 }
 
-void WirelessController::vibrate(int durationMilliseconds, int intensity) {
+void WirelessController::vibrate(int level) {
   vibrationStartedTime = millis();
-  vibrationDuration = durationMilliseconds;
-  ps2.vibrate(2, intensity);
+  vibrationDuration = level == VIBRATION_HEAVY ? 250 : 175;
+
+  ps2.vibrate(2,  level == VIBRATION_HEAVY ? 200 : 100);
 }
 

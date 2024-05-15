@@ -4,6 +4,12 @@
 #include "Arduino.h"
 #include "../vendor/Cytron_PS2Shield.h"
 
+enum {
+  VIBRATION_HEAVY,
+  VIBRATION_LIGHT,
+};
+
+
 class WirelessController {
   protected:
   Cytron_PS2Shield ps2;
@@ -25,7 +31,7 @@ class WirelessController {
   int getAxisState(int axis);
   void onButtonPressed(int button, void (*func)());
   void onAxisChange(int axis, void (*func)(int));
-  void vibrate(int durationMilliseconds, int intensity);
+  void vibrate(int level);
 };
 
 #endif

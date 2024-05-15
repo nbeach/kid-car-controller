@@ -9,9 +9,9 @@ class ThrottlePedal : public AbstractThrottle {
         int throttlePin;
         int forwardPin;
         int reversePin;
-        int lastThrottlePosition = 0;
-        int direction = 1;
         int fault = false;
+        int throttlePosition();
+        int direction();
 
     public:
         ThrottlePedal(int throttlePin, int forwardPin, int reversePin);

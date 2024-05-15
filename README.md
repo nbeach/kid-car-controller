@@ -8,7 +8,6 @@
 
 
 ## Code
-- better controller vibration abstraction
 - Generic selector class
 - Destructors/Actual memory management?
 

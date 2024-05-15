@@ -41,7 +41,6 @@ SpeedLimitSelector* speedLimitSelector;
 AccelerationRampingSelector* accelerationRampingSelector;
 
 Motor* steeringMotor;
-
 DriveMotor* driveMotor;
 
 void setup() {
@@ -97,12 +96,12 @@ void setup() {
 
   controller->onButtonPressed(PS2_LEFT_1, [](){
     bool changed = speedLimitSelector->decrease();
-    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
+    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
   controller->onButtonPressed(PS2_RIGHT_1, [](){
     bool changed = speedLimitSelector->increase();
-    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
+    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
   //Acceleration Ramp Rate
@@ -116,26 +115,26 @@ void setup() {
 
   controller->onButtonPressed(PS2_LEFT_2, [](){ 
     bool changed = accelerationRampingSelector->decrease();
-    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
+    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
   controller->onButtonPressed(PS2_RIGHT_2, [](){ 
     bool changed = accelerationRampingSelector->increase();
-    controller->vibrate(changed ? 175 : 250, changed ? 100 : 200);
+    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
   //Emergency Stop
   controller->onButtonPressed(PS2_TRIANGLE, [](){
     bool stopped = driveMotor->toggleEmergencyStop();
     Serial.println("Emergency Stop Enabled: " + String(stopped));
-    controller->vibrate(stopped ? 250 : 175, stopped ? 200 : 100);
+    controller->vibrate(stopped ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
 
   //Secondary Throttle Disable
   controller->onButtonPressed(PS2_SQUARE, [](){ 
     bool disabled = false; //throttle->toggleDisableSecondary();
     Serial.println("Throttle Pedal Disabled: " + String(disabled));
-    controller->vibrate(disabled ? 250 : 175, disabled ? 200 : 100);
+    controller->vibrate(disabled ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
 
   delay(200);
