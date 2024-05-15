@@ -4,24 +4,19 @@
 #include <SoftwareSerial.h>
 
 ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
-    this->throttlePin = throttlePin;
-    this->forwardPin = forwardPin;
-    this->reversePin = reversePin;
-
     pinMode(throttlePin, INPUT);
     pinMode(forwardPin, INPUT);
     pinMode(reversePin, INPUT);
 
-    int positionAtInit = getPosition();
-    if(positionAtInit != 0) {
-        fault = true;
-        Serial.println("Throttle pedal fault. Initial position not zero. Position is: " + String(positionAtInit));
-    }
+    this->throttlePin = throttlePin;
+    this->forwardPin = forwardPin;
+    this->reversePin = reversePin;
+    this->zeroThrottleReading = analogRead(throttlePin) + 100;
 }
 
 int ThrottlePedal::throttlePosition() {
     int pinValue = analogRead(throttlePin);
-    int withZeroMinimum = pinValue < 250 ? 0 : pinValue - 250;
+    int withZeroMinimum = pinValue < zeroThrottleReading ? 0 : pinValue - zeroThrottleReading;
     int withClippedMaximum = withZeroMinimum > 500 ? 500 : withZeroMinimum;
     int throttlePosition = (withClippedMaximum / 5) * 2.56;
 
@@ -39,5 +34,5 @@ int ThrottlePedal::direction() {
 }
 
 int ThrottlePedal::getPosition() {
-    return fault ? 0 : (throttlePosition() * direction());
+    return throttlePosition() * direction();
 }
