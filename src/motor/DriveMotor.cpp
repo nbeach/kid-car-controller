@@ -42,10 +42,10 @@ void DriveMotor::setAccelerationRamping(double rate) {
 }
 
 void DriveMotor::tick() {
+    int priorSpeed = speedRamper->getCurrentSpeed();
     speedRamper->tick();
     int speed = speedRamper->getCurrentSpeed();
-    if(speed != lastSpeed) motor->setSpeed(speed);
-    lastSpeed = speed;
+    if(speed != priorSpeed) motor->setSpeed(speed);
 }
 
 bool DriveMotor::toggleEmergencyStop() {

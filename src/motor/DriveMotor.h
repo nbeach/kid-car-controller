@@ -12,7 +12,6 @@ class DriveMotor : public AbstractMotor {
         int speedLimit = 256;
         int commandedSpeed = 0;
         int limitedSpeed = 0;
-        int lastSpeed = 0;
         bool emergencyStopEnabled = false;
         bool isAboveLimit(int speed);
 

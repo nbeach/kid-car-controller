@@ -34,7 +34,6 @@ void SpeedRamper::setDecelerationRate(double rate) {
 }
 
 void SpeedRamper::tick() {
-    //if(currentSpeed == targetSpeed) return;
     bool isAcceleratingForward = (targetSpeed > 0) && (currentSpeed < targetSpeed);
     bool isAcceleratingBackward = (targetSpeed < 0) && (currentSpeed > targetSpeed);
     bool isDeceleratingFromReverse = (currentSpeed < 0) && (targetSpeed > currentSpeed);

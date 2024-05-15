@@ -6,7 +6,7 @@
 template <typename T>
 class SettingSelector {
 private:
-    void (*callback)(T);
+    void (*callback)(T) = NULL;
     int settingCount;
     T* settings;
     int currentSettingIndex;
