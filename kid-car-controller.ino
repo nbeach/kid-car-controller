@@ -112,7 +112,7 @@ void setup() {
     controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
-  //Acceleration Ramp Rate
+  //Acceleration Ramp Rate Selector
   accelerationRampingSelector = new SettingSelector<double>(
     ACCELERATION_RAMPING_RATES,
     ACCELERATION_RAMPING_RATE_COUNT,
