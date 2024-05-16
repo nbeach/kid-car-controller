@@ -43,9 +43,9 @@ void SpeedRamper::tick() {
 
     int timePassedSinceCurrentSpeedSet = millis() - timeCurrentSpeedSet;
     double rampingRateForDirection = isDecelerating ? decelerationRampingRate : accelerationRampingRate;
-    double timeItWouldTakeToAccelerateToCurrentSpeed = sqrt((1 / rampingRateForDirection) * abs(currentSpeed));
+    double timeItWouldTakeToAccelerateToCurrentSpeed = currentSpeed / rampingRateForDirection;
     int changeDirection = isDecelerating ? -1 : 1;
-    double speedChangeFromInitial = rampingRateForDirection * pow(timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * changeDirection), 2);
+    double speedChangeFromInitial = rampingRateForDirection * (timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * changeDirection));
     speedChangeFromInitial =  (isAcceleratingBackward || isDeceleratingFromReverse) ? speedChangeFromInitial * -1 : speedChangeFromInitial;
 
     int newSpeed;
