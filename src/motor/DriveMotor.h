@@ -11,7 +11,6 @@ class DriveMotor : public AbstractMotor {
         SpeedRamper* speedRamper;
         int speedLimit = 256;
         int commandedSpeed = 0;
-        int limitedSpeed = 0;
         bool emergencyStopEnabled = false;
         bool isAboveLimit(int speed);
 

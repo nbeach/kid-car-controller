@@ -5,7 +5,7 @@
 
 DriveMotor::DriveMotor(AbstractMotor* motor) {
     this->motor = motor;
-    speedRamper = new SpeedRamper(0.001, 0.001);
+    speedRamper = new SpeedRamper(0.001, 0.0005);
 }
 
 DriveMotor::~DriveMotor() {
@@ -15,16 +15,14 @@ DriveMotor::~DriveMotor() {
 
 void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
-    if(speed < 0) {
-        limitedSpeed = isAboveLimit(speed) ? speedLimit * -1 : speed;
-    } else {
-        limitedSpeed = isAboveLimit(speed) ? speedLimit : speed;
-    }
+
+    int throttlePercentage = speed / 256;
+    int newSpeed = throttlePercentage * speedLimit;
 
     if(emergencyStopEnabled) {
         Serial.println("Emergency stop enabled. Ignoring speed change.");
     } else {
-        speedRamper->setTargetSpeed(limitedSpeed);
+        speedRamper->setTargetSpeed(newSpeed);
     }
 }
 
