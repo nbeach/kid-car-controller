@@ -5,7 +5,7 @@
 
 DriveMotor::DriveMotor(AbstractMotor* motor) {
     this->motor = motor;
-    speedRamper = new SpeedRamper(1.6, 0.36);
+    speedRamper = new SpeedRamper(0.088);
 }
 
 DriveMotor::~DriveMotor() {
@@ -16,7 +16,7 @@ DriveMotor::~DriveMotor() {
 void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
 
-    int throttlePercentage = speed / 256;
+    double throttlePercentage = speed / 256.0;
     int newSpeed = throttlePercentage * speedLimit;
 
     if(emergencyStopEnabled) {
@@ -33,10 +33,6 @@ bool DriveMotor::isAboveLimit(int speed) {
 void DriveMotor::setSpeedLimit(int limit) {
     speedLimit = limit;
     setSpeed(commandedSpeed);
-}
-
-void DriveMotor::setAccelerationRamping(double rate) {
-    speedRamper->setAccelerationRate(rate);
 }
 
 void DriveMotor::tick() {

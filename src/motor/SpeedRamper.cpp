@@ -3,13 +3,11 @@
 #include "Arduino.h"
 #include "AbstractMotor.h"
 
-SpeedRamper::SpeedRamper(double accelerationRampingRate, double decelerationRampingRate) {
-    this->accelerationRampingRate = accelerationRampingRate;
+SpeedRamper::SpeedRamper(double decelerationRampingRate) {
     this->decelerationRampingRate = decelerationRampingRate;
 }
 
 void SpeedRamper::setCurrentSpeed(int speed) {
-    if(speed == currentSpeed || currentSpeed == targetSpeed) return currentSpeed;
     currentSpeed = speed;
     timeCurrentSpeedSet = millis();
 }
@@ -19,40 +17,22 @@ int SpeedRamper::getCurrentSpeed() {
 }
 
 void SpeedRamper::setTargetSpeed(int speed) {
-    initialSpeed = currentSpeed;
     targetSpeed = speed;
-    timeCurrentSpeedSet = millis();
-    return speed;
-}
-
-void SpeedRamper::setAccelerationRate(double rate) {
-    this->accelerationRampingRate = rate;
-}
-
-void SpeedRamper::setDecelerationRate(double rate) {
-    this->decelerationRampingRate = rate;
 }
 
 void SpeedRamper::tick() {
-    bool isAcceleratingForward = (targetSpeed > 0) && (currentSpeed < targetSpeed);
-    bool isAcceleratingBackward = (targetSpeed < 0) && (currentSpeed > targetSpeed);
-    bool isDeceleratingFromReverse = (currentSpeed < 0) && (targetSpeed > currentSpeed);
-    bool isDeceleratingFromForward = (currentSpeed > 0) && (targetSpeed < currentSpeed);
-    bool isAccelerating = isAcceleratingForward || isAcceleratingBackward;
-    bool isDecelerating = isDeceleratingFromForward || isDeceleratingFromReverse;
+    bool isDeceleratingAcrossZero = (currentSpeed > 0  && targetSpeed <= 0) || (currentSpeed < 0 && targetSpeed >= 0);
+    bool isDeceleratingOnOneSideOfZero = abs(currentSpeed) > abs(targetSpeed);
+    bool isDecelerating = isDeceleratingAcrossZero || isDeceleratingOnOneSideOfZero;
 
-    int timePassedSinceCurrentSpeedSet = millis() - timeCurrentSpeedSet;
-    double rampingRateForDirection = isDecelerating ? decelerationRampingRate : accelerationRampingRate;
-    double timeItWouldTakeToAccelerateToCurrentSpeed = currentSpeed / rampingRateForDirection;
-    int changeDirection = isDecelerating ? -1 : 1;
-    double speedChangeFromInitial = rampingRateForDirection * (timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * changeDirection));
-    speedChangeFromInitial =  (isAcceleratingBackward || isDeceleratingFromReverse) ? speedChangeFromInitial * -1 : speedChangeFromInitial;
-
-    int newSpeed;
-    if(isAcceleratingForward || isDeceleratingFromReverse) {
-        newSpeed = speedChangeFromInitial >= targetSpeed ? targetSpeed : speedChangeFromInitial;
+    double newSpeed;
+    if(isDecelerating) {
+        int timePassedSinceCurrentSpeedSet = millis() - timeCurrentSpeedSet;
+        double timeItWouldTakeToAccelerateToCurrentSpeed = currentSpeed / decelerationRampingRate;;
+        int numberLineDirection = targetSpeed >= currentSpeed ? 1 : -1;
+        newSpeed = decelerationRampingRate * (timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * numberLineDirection));
     } else {
-        newSpeed = speedChangeFromInitial <= targetSpeed ? targetSpeed : speedChangeFromInitial;
+        newSpeed = targetSpeed;
     }
 
     setCurrentSpeed(newSpeed);

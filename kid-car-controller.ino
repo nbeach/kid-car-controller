@@ -16,10 +16,6 @@ const int SPEED_LIMIT_COUNT = 5;
 const int SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 64, 88, 112, 184, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const int ACCELERATION_RAMPING_RATE_COUNT = 5;
-const int ACCELERATION_RAMPING_RATES = new double[ACCELERATION_RAMPING_RATE_COUNT] { 0.051, 0.088, 0.16, 0.36, 1.6 };
-const int ACCELERATION_RAMPING_RATE_DEFAULT_INDEX = 2;
-
 const int STEERING_MOTOR_PIN_1 = 11;
 const int STEERING_MOTOR_PIN_2 = 13;
 
@@ -109,29 +105,6 @@ void setup() {
 
   controller->onButtonPressed(PS2_RIGHT_1, [](){
     bool changed = speedLimitSelector->increase();
-    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
-  });
-
-  //Acceleration Ramp Rate Selector
-  accelerationRampingSelector = new SettingSelector<double>(
-    ACCELERATION_RAMPING_RATES,
-    ACCELERATION_RAMPING_RATE_COUNT,
-    ACCELERATION_RAMPING_RATE_DEFAULT_INDEX
-  );
-  driveMotor->setAccelerationRamping(accelerationRampingSelector->currentSetting());
-
-  accelerationRampingSelector->onChange([](double rate){
-    Serial.println("Acceleration Ramping: " + String(rate));
-    driveMotor->setAccelerationRamping(rate);
-  });
-
-  controller->onButtonPressed(PS2_LEFT_2, [](){ 
-    bool changed = accelerationRampingSelector->decrease();
-    controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
-  });
-
-  controller->onButtonPressed(PS2_RIGHT_2, [](){ 
-    bool changed = accelerationRampingSelector->increase();
     controller->vibrate(changed ? VIBRATION_LIGHT : VIBRATION_HEAVY);
   });
 
