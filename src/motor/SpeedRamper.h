@@ -10,7 +10,6 @@ class SpeedRamper {
     int targetSpeed = 0;
     int timeCurrentSpeedSet = 0;
 
-
     public:
     SpeedRamper(double decelerationRampingRate);
     void setTargetSpeed(int speed);

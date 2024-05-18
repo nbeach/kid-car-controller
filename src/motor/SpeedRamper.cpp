@@ -24,9 +24,10 @@ void SpeedRamper::tick() {
     bool isDeceleratingAcrossZero = (currentSpeed > 0  && targetSpeed <= 0) || (currentSpeed < 0 && targetSpeed >= 0);
     bool isDeceleratingOnOneSideOfZero = abs(currentSpeed) > abs(targetSpeed);
     bool isDecelerating = isDeceleratingAcrossZero || isDeceleratingOnOneSideOfZero;
+    bool isReversing = targetSpeed < 0 && currentSpeed <= 0 && currentSpeed >= targetSpeed;
 
     double newSpeed;
-    if(isDecelerating) {
+    if(isDecelerating || isReversing) {
         int timePassedSinceCurrentSpeedSet = millis() - timeCurrentSpeedSet;
         double timeItWouldTakeToAccelerateToCurrentSpeed = currentSpeed / decelerationRampingRate;;
         int numberLineDirection = targetSpeed >= currentSpeed ? 1 : -1;

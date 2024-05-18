@@ -17,7 +17,8 @@ void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
 
     double throttlePercentage = speed / 256.0;
-    int newSpeed = throttlePercentage * speedLimit;
+    int directionalSpeedLimit = speed >= 0 ? speedLimit : reverseSpeedLimit;
+    int newSpeed = throttlePercentage * directionalSpeedLimit;
 
     if(emergencyStopEnabled) {
         Serial.println("Emergency stop enabled. Ignoring speed change.");
