@@ -6,6 +6,7 @@
 #include "src/control/WirelessControllerThrottle.h"
 #include "src/motor/NullMotor.h"
 #include "src/motor/Motor.h"
+#include "src/motor/SteeringMotor.h"
 #include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/selection/SettingSelector.h"
@@ -18,6 +19,7 @@ const int SPEED_LIMITS_DEFAULT_INDEX = 3;
 
 const int STEERING_MOTOR_PIN_1 = 11;
 const int STEERING_MOTOR_PIN_2 = 13;
+const int STEERING_MOTOR_RELAY_PIN = A3;
 
 const int CONTROLLER_PIN_1 = 8;
 const int CONTROLLER_PIN_2 = 9;
@@ -43,7 +45,7 @@ PriorityCompositeThrottle* throttle;
 SettingSelector<int>* speedLimitSelector;
 SettingSelector<double>* accelerationRampingSelector;
 
-Motor* steeringMotor;
+SteeringMotor* steeringMotor;
 DriveMotor* driveMotor;
 
 void setup() {
@@ -67,7 +69,7 @@ void setup() {
   driveMotor = new DriveMotor(baseMotor);
 
   //Steering Motor
-  steeringMotor = new Motor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2);
+  steeringMotor = new SteeringMotor(new Motor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2), STEERING_MOTOR_RELAY_PIN);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
     Serial.println("Steering Position: " + String(position));
