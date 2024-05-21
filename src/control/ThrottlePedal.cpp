@@ -5,8 +5,8 @@
 
 ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
     pinMode(throttlePin, INPUT);
-    pinMode(forwardPin, INPUT);
-    pinMode(reversePin, INPUT);
+    pinMode(forwardPin, INPUT_PULLUP);
+    pinMode(reversePin, INPUT_PULLUP);
 
     this->throttlePin = throttlePin;
     this->forwardPin = forwardPin;
@@ -24,9 +24,10 @@ int ThrottlePedal::throttlePosition() {
 }
 
 int ThrottlePedal::direction() {
-    if(analogRead(forwardPin) < 735) {
+    Serial.println("forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttle: " + String(analogRead(throttlePin)));
+    if(digitalRead(forwardPin) == LOW) {
         return 1;
-    } else if(analogRead(reversePin) < 735) {
+    } else if(digitalRead(reversePin) == LOW) {
         return -1;
     } else {
         return 0;

@@ -17,7 +17,9 @@ void DriveMotor::setSpeed(int speed) {
     commandedSpeed = speed;
 
     double throttlePercentage = speed / 256.0;
-    int directionalSpeedLimit = speed >= 0 ? speedLimit : reverseSpeedLimit;
+    int cappedReverseSpeedLimit = speedLimit < reverseSpeedLimit ? speedLimit : reverseSpeedLimit;
+    int directionalSpeedLimit = speed >= 0 ? speedLimit : cappedReverseSpeedLimit;
+
     int newSpeed = throttlePercentage * directionalSpeedLimit;
 
     if(emergencyStopEnabled) {
