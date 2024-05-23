@@ -43,7 +43,6 @@ WirelessController* controller;
 PriorityCompositeThrottle* throttle;
 
 SettingSelector<int>* speedLimitSelector;
-SettingSelector<double>* accelerationRampingSelector;
 
 SteeringMotor* steeringMotor;
 DriveMotor* driveMotor;
