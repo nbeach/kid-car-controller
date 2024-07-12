@@ -5,7 +5,7 @@
 
 DriveMotor::DriveMotor(AbstractMotor* motor) {
     this->motor = motor;
-    speedRamper = new SpeedRamper(0.088);
+    speedRamper = new SpeedRamper(0.25);
 }
 
 DriveMotor::~DriveMotor() {
