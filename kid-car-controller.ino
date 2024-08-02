@@ -15,7 +15,7 @@ const int DISABLE_DRIVE_MOTORS = false;
 
 const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
-const int SPEED_LIMITS_DEFAULT_INDEX = 3;
+const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
 const int STEERING_MOTOR_PIN_1 = 11;
 const int STEERING_MOTOR_PIN_2 = 13;
