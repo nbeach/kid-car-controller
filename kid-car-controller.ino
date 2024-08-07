@@ -17,12 +17,12 @@ const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const int STEERING_MOTOR_PIN_1 = 11;
+const int STEERING_MOTOR_PIN_1 = 5;
 const int STEERING_MOTOR_PIN_2 = 13;
 const int STEERING_MOTOR_RELAY_PIN = A3;
 
-const int CONTROLLER_PIN_1 = 8;
-const int CONTROLLER_PIN_2 = 9;
+const int CONTROLLER_PIN_1 = 0;
+const int CONTROLLER_PIN_2 = 1;
 const int CONTROLLER_BAUD = 9600;
 
 const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
@@ -30,13 +30,13 @@ const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A4;
 const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
 const int DRIVE_MOTOR_COUNT = 4;
-const int REAR_LEFT_MOTOR_PIN_1 = 3;
+const int REAR_LEFT_MOTOR_PIN_1 = 9;
 const int REAR_LEFT_MOTOR_PIN_2 = 2;
-const int REAR_RIGHT_MOTOR_PIN_1 = 6;
+const int REAR_RIGHT_MOTOR_PIN_1 = 10;
 const int REAR_RIGHT_MOTOR_PIN_2 = 7;
-const int FRONT_LEFT_MOTOR_PIN_1 = 5;
+const int FRONT_LEFT_MOTOR_PIN_1 = 3;
 const int FRONT_LEFT_MOTOR_PIN_2 = 4;
-const int FRONT_RIGHT_MOTOR_PIN_1 = 10;
+const int FRONT_RIGHT_MOTOR_PIN_1 = 11;
 const int FRONT_RIGHT_MOTOR_PIN_2 = 12;
 
 WirelessController* controller;
@@ -49,7 +49,12 @@ DriveMotor* driveMotor;
 
 void setup() {
   Serial.begin(115200);
-  
+
+  //Set PWM frequency to 3921.16Hz
+  TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
+  TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
+
+
   // Wirless Controller
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
 
