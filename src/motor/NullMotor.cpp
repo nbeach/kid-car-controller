@@ -1,6 +1,6 @@
 #include "NullMotor.h"
 
-NullMotor::NullMotor(Logger* logger) {
+NullMotor::NullMotor(AbstractLogger* logger) {
     this->logger = logger;
 }
 

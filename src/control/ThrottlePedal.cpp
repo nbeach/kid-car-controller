@@ -1,6 +1,6 @@
 #include "ThrottlePedal.h"
 
-ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin, Logger* logger) {
+ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin, AbstractLogger* logger) {
     pinMode(throttlePin, INPUT);
     pinMode(forwardPin, INPUT_PULLUP);
     pinMode(reversePin, INPUT_PULLUP);

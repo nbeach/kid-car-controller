@@ -1,18 +1,18 @@
-#ifndef Logger_h
-#define Logger_h
+#ifndef SerialLogger_h
+#define SerialLogger_h
 
 #include "Arduino.h"
 #include <SoftwareSerial.h>
+#include "./AbstractLogger.h"
 
-class Logger {
+class SerialLogger : public AbstractLogger {
     public:
-    Logger(int baud) {
+    SerialLogger(int baud) {
         Serial.begin(baud);
     }
     void info(String text) {
         Serial.println(text);
     }
-
 };
 
 #endif

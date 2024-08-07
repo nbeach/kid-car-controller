@@ -10,9 +10,12 @@
 #include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/selection/SettingSelector.h"
-#include "src/logging/Logger.h"
+#include "src/logging/AbstractLogger.h"
+#include "src/logging/SerialLogger.h"
+#include "src/logging/NullLogger.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
+const bool DISABLE_LOGGING = true;
 
 const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
@@ -47,14 +50,16 @@ SettingSelector<int>* speedLimitSelector;
 
 SteeringMotor* steeringMotor;
 DriveMotor* driveMotor;
-Logger* logger;
+AbstractLogger* logger;
 
 void setup() {
   //Set PWM frequency to 3921.16Hz
   TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
   TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
 
-  logger = new Logger(115200);
+  logger = DISABLE_LOGGING 
+    ? (AbstractLogger*)new NullLogger() 
+    : (AbstractLogger*)new SerialLogger(115200);
 
   // Wirless Controller
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);

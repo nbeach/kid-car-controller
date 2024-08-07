@@ -14,12 +14,12 @@ class PriorityCompositeThrottle : public AbstractThrottle {
     int priorPosition = 0;
 
     public:
-        PriorityCompositeThrottle(AbstractThrottle* primary, AbstractThrottle* secondary);
-        ~PriorityCompositeThrottle();
-        void onPositionChange(void (*func)(int));
-        int getPosition();
-        void poll();
-        bool toggleDisableSecondary();
+    PriorityCompositeThrottle(AbstractThrottle* primary, AbstractThrottle* secondary);
+    ~PriorityCompositeThrottle();
+    void onPositionChange(void (*func)(int));
+    int getPosition();
+    void poll();
+    bool toggleDisableSecondary();
 };
 
 #endif

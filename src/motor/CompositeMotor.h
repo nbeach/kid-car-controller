@@ -3,16 +3,16 @@
 
 #include "Arduino.h"
 #include "AbstractMotor.h"
-#include "../logging/Logger.h"
+#include "../logging/AbstractLogger.h"
 
 class CompositeMotor : public AbstractMotor {
     private:
         AbstractMotor** motors;
         int count;
-        Logger* logger;
+        AbstractLogger* logger;
 
     public:
-        CompositeMotor(AbstractMotor** motors, int count, Logger* logger);
+        CompositeMotor(AbstractMotor** motors, int count, AbstractLogger* logger);
         ~CompositeMotor();
         void setSpeed(int speed);
 };

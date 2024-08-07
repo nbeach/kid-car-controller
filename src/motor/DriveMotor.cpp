@@ -2,7 +2,7 @@
 
 #include "Arduino.h"
 
-DriveMotor::DriveMotor(AbstractMotor* motor, Logger* logger) {
+DriveMotor::DriveMotor(AbstractMotor* motor, AbstractLogger* logger) {
     this->motor = motor;
     speedRamper = new SpeedRamper(0.25);
     this->logger = logger;
