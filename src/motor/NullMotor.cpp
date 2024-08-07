@@ -1,6 +1,9 @@
 #include "NullMotor.h"
-#include <SoftwareSerial.h>
+
+NullMotor::NullMotor(Logger* logger) {
+    this->logger = logger;
+}
 
 void NullMotor::setSpeed(int speed) {
-    Serial.println("Commanded Speed: " + String(speed));
+    this->logger->info("Commanded Speed: " + String(speed));
 }

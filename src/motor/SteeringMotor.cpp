@@ -1,7 +1,6 @@
 #include "SteeringMotor.h"
 
 #include "AbstractMotor.h"
-#include <SoftwareSerial.h>
 
 SteeringMotor::SteeringMotor(AbstractMotor* motor, int relayPin) {
     this->motor = motor;

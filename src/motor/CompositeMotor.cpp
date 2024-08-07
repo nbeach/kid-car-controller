@@ -1,11 +1,11 @@
 #include "CompositeMotor.h"
 
 #include "Arduino.h"
-#include <SoftwareSerial.h>
 
-CompositeMotor::CompositeMotor(AbstractMotor** motors, int count) {
+CompositeMotor::CompositeMotor(AbstractMotor** motors, int count, Logger* logger) {
     this->motors = motors;
     this->count = count;
+    this->logger = logger;
 }
 
 CompositeMotor::~CompositeMotor() {
@@ -16,7 +16,7 @@ CompositeMotor::~CompositeMotor() {
 }
 
 void CompositeMotor::setSpeed(int speed) {
-    Serial.println("Commanded Speed: " + String(speed));
+    this->logger->info("Commanded Speed: " + String(speed));
     for(int i = 0; i < count; i++) {
         motors[i]->setSpeed(speed);
     }

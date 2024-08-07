@@ -1,11 +1,11 @@
 #include "DriveMotor.h"
 
 #include "Arduino.h"
-#include <SoftwareSerial.h>
 
-DriveMotor::DriveMotor(AbstractMotor* motor) {
+DriveMotor::DriveMotor(AbstractMotor* motor, Logger* logger) {
     this->motor = motor;
     speedRamper = new SpeedRamper(0.25);
+    this->logger = logger;
 }
 
 DriveMotor::~DriveMotor() {
@@ -23,7 +23,7 @@ void DriveMotor::setSpeed(int speed) {
     int newSpeed = throttlePercentage * directionalSpeedLimit;
 
     if(emergencyStopEnabled) {
-        Serial.println("Emergency stop enabled. Ignoring speed change.");
+        this->logger->info("Emergency stop enabled. Ignoring speed change.");
     } else {
         speedRamper->setTargetSpeed(newSpeed);
     }

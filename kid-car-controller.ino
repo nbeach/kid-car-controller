@@ -10,6 +10,7 @@
 #include "src/motor/DriveMotor.h"
 #include "src/motor/CompositeMotor.h"
 #include "src/selection/SettingSelector.h"
+#include "src/logging/Logger.h"
 
 const int DISABLE_DRIVE_MOTORS = false;
 
@@ -46,14 +47,14 @@ SettingSelector<int>* speedLimitSelector;
 
 SteeringMotor* steeringMotor;
 DriveMotor* driveMotor;
+Logger* logger;
 
 void setup() {
-  Serial.begin(115200);
-
   //Set PWM frequency to 3921.16Hz
   TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
   TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
 
+  logger = new Logger(115200);
 
   // Wirless Controller
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
@@ -67,16 +68,16 @@ void setup() {
   };
 
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
-    ? (AbstractMotor*)new NullMotor()
-    : (AbstractMotor*)new CompositeMotor(motors, DRIVE_MOTOR_COUNT);
+    ? (AbstractMotor*)new NullMotor(logger)
+    : (AbstractMotor*)new CompositeMotor(motors, DRIVE_MOTOR_COUNT, logger);
 
-  driveMotor = new DriveMotor(baseMotor);
+  driveMotor = new DriveMotor(baseMotor, logger);
 
   //Steering Motor
   steeringMotor = new SteeringMotor(new Motor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2), STEERING_MOTOR_RELAY_PIN);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
-    Serial.println("Steering Position: " + String(position));
+    logger->info("Steering Position: " + String(position));
     steeringMotor->setSpeed(position);
   });
 
@@ -85,13 +86,14 @@ void setup() {
   ThrottlePedal* pedal = new ThrottlePedal(
     THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN,
     THROTTLE_PEDAL_FORWARD_ANALOG_PIN,
-    THROTTLE_PEDAL_REVERSE_ANALOG_PIN
+    THROTTLE_PEDAL_REVERSE_ANALOG_PIN,
+    logger
   );
 
   throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
 
   throttle->onPositionChange([](int position){
-    Serial.println("Throttle Position: " + String(position));
+    logger->info("Throttle Position: " + String(position));
     driveMotor->setSpeed(position);
   });
 
@@ -100,7 +102,7 @@ void setup() {
   driveMotor->setSpeedLimit(speedLimitSelector->currentSetting());
 
   speedLimitSelector->onChange([](int speed){
-    Serial.println("Speed Limit: " + String(speed));
+    logger->info("Speed Limit: " + String(speed));
     driveMotor->setSpeedLimit(speed);
   });
 
@@ -117,18 +119,18 @@ void setup() {
   //Emergency Stop
   controller->onButtonPressed(PS2_TRIANGLE, [](){
     bool stopped = driveMotor->toggleEmergencyStop();
-    Serial.println("Emergency Stop Enabled: " + String(stopped));
+    logger->info("Emergency Stop Enabled: " + String(stopped));
     controller->vibrate(stopped ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
 
   //Secondary Throttle Disable
   controller->onButtonPressed(PS2_SQUARE, [](){ 
     bool disabled = throttle->toggleDisableSecondary();
-    Serial.println("Throttle Pedal Disabled: " + String(disabled));
+    logger->info("Throttle Pedal Disabled: " + String(disabled));
     controller->vibrate(disabled ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
 
-  Serial.println("Init Complete");
+  logger->info("Init Complete");
 }
 
 void loop() {

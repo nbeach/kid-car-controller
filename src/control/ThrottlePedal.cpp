@@ -1,9 +1,6 @@
 #include "ThrottlePedal.h"
 
-#include "Arduino.h"
-#include <SoftwareSerial.h>
-
-ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
+ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin, Logger* logger) {
     pinMode(throttlePin, INPUT);
     pinMode(forwardPin, INPUT_PULLUP);
     pinMode(reversePin, INPUT_PULLUP);
@@ -12,6 +9,7 @@ ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin) {
     this->forwardPin = forwardPin;
     this->reversePin = reversePin;
     this->zeroThrottleReading = analogRead(throttlePin) + 100;
+    this->logger = logger;
 }
 
 int ThrottlePedal::throttlePosition() {
@@ -24,7 +22,7 @@ int ThrottlePedal::throttlePosition() {
 }
 
 int ThrottlePedal::direction() {
-    Serial.println("forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttle: " + String(analogRead(throttlePin)));
+    this->logger->info("forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttle: " + String(analogRead(throttlePin)));
     if(digitalRead(forwardPin) == LOW) {
         return 1;
     } else if(digitalRead(reversePin) == LOW) {
