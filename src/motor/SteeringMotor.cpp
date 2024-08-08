@@ -14,14 +14,9 @@ void SteeringMotor::setSpeed(int speed) {
         speed = -255;
     }
 
-    if (speed >= 0) {
-        analogWrite(this->pwmPin, speed);
-        digitalWrite(this->directionPin, LOW);
-    } else {
-        analogWrite(this->pwmPin, -speed);
-        digitalWrite(this->directionPin, HIGH);
-    }
-    digitalWrite(this->relayPin, speed != 0 ? HIGH : LOW);
+    analogWrite(pwmPin, speed >= 0 ? speed : -speed);
+    digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
+    digitalWrite(relayPin, speed != 0 ? HIGH : LOW);
 }
 
 

@@ -21,27 +21,28 @@ const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const int STEERING_MOTOR_PIN_1 = 5;
-const int STEERING_MOTOR_PIN_2 = 13;
+const int STEERING_MOTOR_PWM_PIN = 5;
+const int STEERING_MOTOR_DIRECTION_PIN = 13;
 const int STEERING_MOTOR_RELAY_PIN = A3;
 
-const int CONTROLLER_PIN_1 = 0;
-const int CONTROLLER_PIN_2 = 1;
+const int CONTROLLER_RX_PIN = 0;
+const int CONTROLLER_TX_PIN = 1;
 const int CONTROLLER_BAUD = 9600;
 
 const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
 const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A4;
 const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
+const int DRIVE_MOTOR_PWM_FREQUENCY = 16000;
 const int DRIVE_MOTOR_COUNT = 4;
-const int REAR_LEFT_MOTOR_PIN_1 = 9;
-const int REAR_LEFT_MOTOR_PIN_2 = 2;
-const int REAR_RIGHT_MOTOR_PIN_1 = 10;
-const int REAR_RIGHT_MOTOR_PIN_2 = 7;
-const int FRONT_LEFT_MOTOR_PIN_1 = 3;
-const int FRONT_LEFT_MOTOR_PIN_2 = 4;
-const int FRONT_RIGHT_MOTOR_PIN_1 = 11;
-const int FRONT_RIGHT_MOTOR_PIN_2 = 12;
+const int REAR_LEFT_MOTOR_PWM_PIN = 9;
+const int REAR_LEFT_MOTOR_DIRECTION_PIN = 2;
+const int REAR_RIGHT_MOTOR_PWM_PIN = 10;
+const int REAR_RIGHT_MOTOR_DIRECTION_PIN = 7;
+const int FRONT_LEFT_MOTOR_PWM_PIN = 3;
+const int FRONT_LEFT_MOTOR_DIRECTION_PIN = 4;
+const int FRONT_RIGHT_MOTOR_PWM_PIN = 11;
+const int FRONT_RIGHT_MOTOR_DIRECTION_PIN = 12;
 
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
@@ -58,15 +59,14 @@ void setup() {
     : (AbstractLogger*)new SerialLogger(115200);
 
   //Wireless Controller
-  controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
+  controller = new WirelessController(CONTROLLER_RX_PIN, CONTROLLER_TX_PIN, CONTROLLER_BAUD);
 
   //Drive Motor
-  int pwmFrequency = 16000;
   AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
-    new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2, pwmFrequency),
-    new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2, pwmFrequency),
-    new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2, pwmFrequency),
-    new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2, pwmFrequency)
+    new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+    new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+    new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+    new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY)
   };
 
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
@@ -76,7 +76,7 @@ void setup() {
   driveMotor = new DriveMotor(baseMotor, logger);
 
   //Steering Motor
-  steeringMotor = new SteeringMotor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2, STEERING_MOTOR_RELAY_PIN);
+  steeringMotor = new SteeringMotor(STEERING_MOTOR_PWM_PIN, STEERING_MOTOR_DIRECTION_PIN, STEERING_MOTOR_RELAY_PIN);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
     logger->info("Steering Position: " + String(position));

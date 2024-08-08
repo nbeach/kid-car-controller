@@ -5,11 +5,14 @@ Motor::Motor(int pwmPin, int directionPin, int pwmFrequency) {
     this->pwmPin = pwmPin;
     this->directionPin = directionPin;
     this->pwmFrequency = pwmFrequency;
+    this->pwmControl = new AVR_PWM(pwmPin, pwmFrequency, 0);
 
-    pinMode(pwmPin, OUTPUT);
-    pinMode(directionPin, OUTPUT);
     digitalWrite(pwmPin, LOW);
     digitalWrite(directionPin, LOW);
+}
+
+Motor::~Motor() {
+   delete pwmControl;
 }
 
 void Motor::setSpeed(int speed) {
@@ -19,13 +22,8 @@ void Motor::setSpeed(int speed) {
         speed = -255;
     }
 
-    if (speed >= 0) {
-        analogWrite(this->pwmPin, speed);
-        digitalWrite(this->directionPin, LOW);
-    } else {
-        analogWrite(this->pwmPin, -speed);
-        digitalWrite(this->directionPin, HIGH);
-    }
+    pwmControl->setPWM(pwmPin, pwmFrequency, (speed >= 0 ? speed : -speed) / 255 * 100);
+    digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
 }
 
 
