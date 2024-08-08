@@ -15,15 +15,15 @@ int WirelessController::to256Position(int rawPosition) {
 }
 
 
-WirelessController::WirelessController(int pin1, int pin2, int baud) {
+WirelessController::WirelessController(uint8_t rxPin, uint8_t txPin, uint32_t baud) {
   for(int i = 0; i < 26; i++) {
     buttonStates[i] = 1;
     axisStates[i] = 0;
     buttonCallbacks[i] = NULL;
     axisCallbacks[i] = NULL;
   }
-  for(int i = 0; i < 26; i++) { }
-  ps2 = Cytron_PS2Shield(pin1, pin2);
+
+  ps2 = Cytron_PS2Shield(rxPin, txPin);
   ps2.begin(baud);
 }
 

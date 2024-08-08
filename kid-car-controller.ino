@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <stdint.h>
 #include <SoftwareSerial.h>
 #include "src/control/WirelessController.h"
 #include "src/control/ThrottlePedal.h"
@@ -14,35 +15,35 @@
 #include "src/logging/SerialLogger.h"
 #include "src/logging/NullLogger.h"
 
-const int DISABLE_DRIVE_MOTORS = false;
+const bool DISABLE_DRIVE_MOTORS = false;
 const bool DISABLE_LOGGING = true;
 
 const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const int STEERING_MOTOR_PWM_PIN = 5;
-const int STEERING_MOTOR_DIRECTION_PIN = 13;
-const int STEERING_MOTOR_RELAY_PIN = A3;
+const uint8_t STEERING_MOTOR_PWM_PIN = 5;
+const uint8_t STEERING_MOTOR_DIRECTION_PIN = 13;
+const uint8_t STEERING_MOTOR_RELAY_PIN = A3;
 
-const int CONTROLLER_RX_PIN = 0;
-const int CONTROLLER_TX_PIN = 1;
-const int CONTROLLER_BAUD = 9600;
+const uint8_t CONTROLLER_RX_PIN = 0;
+const uint8_t CONTROLLER_TX_PIN = 1;
+const uint32_t CONTROLLER_BAUD = 9600;
 
 const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
 const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A4;
 const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
-const int DRIVE_MOTOR_PWM_FREQUENCY = 16000;
+const int DRIVE_MOTOR_PWM_FREQUENCY = NULL;
 const int DRIVE_MOTOR_COUNT = 4;
-const int REAR_LEFT_MOTOR_PWM_PIN = 9;
-const int REAR_LEFT_MOTOR_DIRECTION_PIN = 2;
-const int REAR_RIGHT_MOTOR_PWM_PIN = 10;
-const int REAR_RIGHT_MOTOR_DIRECTION_PIN = 7;
-const int FRONT_LEFT_MOTOR_PWM_PIN = 3;
-const int FRONT_LEFT_MOTOR_DIRECTION_PIN = 4;
-const int FRONT_RIGHT_MOTOR_PWM_PIN = 11;
-const int FRONT_RIGHT_MOTOR_DIRECTION_PIN = 12;
+const uint8_t REAR_LEFT_MOTOR_PWM_PIN = 9;
+const uint8_t REAR_LEFT_MOTOR_DIRECTION_PIN = 2;
+const uint8_t REAR_RIGHT_MOTOR_PWM_PIN = 10;
+const uint8_t REAR_RIGHT_MOTOR_DIRECTION_PIN = 7;
+const uint8_t FRONT_LEFT_MOTOR_PWM_PIN = 3;
+const uint8_t FRONT_LEFT_MOTOR_DIRECTION_PIN = 4;
+const uint8_t FRONT_RIGHT_MOTOR_PWM_PIN = 11;
+const uint8_t FRONT_RIGHT_MOTOR_DIRECTION_PIN = 12;
 
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
@@ -54,6 +55,12 @@ DriveMotor* driveMotor;
 AbstractLogger* logger;
 
 void setup() {
+  if(DRIVE_MOTOR_PWM_FREQUENCY == NULL) {
+    //Set PWM frequency to 3921.16Hz
+    TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
+    TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
+  }
+
   logger = DISABLE_LOGGING 
     ? (AbstractLogger*)new NullLogger() 
     : (AbstractLogger*)new SerialLogger(115200);

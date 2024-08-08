@@ -23,7 +23,7 @@ class WirelessController {
         int to256Position(int rawPosition);
 
     public:
-        WirelessController(int pin1, int pin2, int baud);
+        WirelessController(uint8_t rxPin, uint8_t txPin, uint32_t baud);
         void poll();
         void pollButtonState(int button);
         void pollAxisState(int axis);

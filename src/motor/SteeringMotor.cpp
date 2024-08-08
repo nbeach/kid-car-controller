@@ -1,10 +1,16 @@
 #include "SteeringMotor.h"
 
-SteeringMotor::SteeringMotor(int pwmPin, int directionPin, int relayPin) {
+SteeringMotor::SteeringMotor(uint8_t pwmPin, uint8_t directionPin, uint8_t relayPin) {
     this->pwmPin = pwmPin;
     this->directionPin = directionPin;
     this->relayPin = relayPin;
+
     pinMode(relayPin, OUTPUT);
+    pinMode(pwmPin, OUTPUT);
+    pinMode(directionPin, OUTPUT);
+    digitalWrite(relayPin, LOW);
+    digitalWrite(pwmPin, LOW);
+    digitalWrite(directionPin, LOW);
 }
 
 void SteeringMotor::setSpeed(int speed) {
