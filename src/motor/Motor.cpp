@@ -1,17 +1,31 @@
 #include "Motor.h"
-
 #include "AbstractMotor.h"
 
-Motor::Motor(int pin1, int pin2) {
-    motor = new CytronMD(PWM_DIR, pin1, pin2);
-}
+Motor::Motor(int pwmPin, int directionPin, int pwmFrequency) {
+    this->pwmPin = pwmPin;
+    this->directionPin = directionPin;
+    this->pwmFrequency = pwmFrequency;
 
-Motor::~Motor() {
-   delete motor;
+    pinMode(pwmPin, OUTPUT);
+    pinMode(directionPin, OUTPUT);
+    digitalWrite(pwmPin, LOW);
+    digitalWrite(directionPin, LOW);
 }
 
 void Motor::setSpeed(int speed) {
-    motor->setSpeed(speed);
+    if (speed > 255) {
+        speed = 255;
+    } else if (speed < -255) {
+        speed = -255;
+    }
+
+    if (speed >= 0) {
+        analogWrite(this->pwmPin, speed);
+        digitalWrite(this->directionPin, LOW);
+    } else {
+        analogWrite(this->pwmPin, -speed);
+        digitalWrite(this->directionPin, HIGH);
+    }
 }
 
 

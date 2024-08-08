@@ -53,23 +53,20 @@ DriveMotor* driveMotor;
 AbstractLogger* logger;
 
 void setup() {
-  //Set PWM frequency to 3921.16Hz
-  TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
-  TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
-
   logger = DISABLE_LOGGING 
     ? (AbstractLogger*)new NullLogger() 
     : (AbstractLogger*)new SerialLogger(115200);
 
-  // Wirless Controller
+  //Wireless Controller
   controller = new WirelessController(CONTROLLER_PIN_1, CONTROLLER_PIN_2, CONTROLLER_BAUD);
 
   //Drive Motor
+  int pwmFrequency = 16000;
   AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
-    new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2),
-    new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2),
-    new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2),
-    new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2)
+    new Motor(REAR_LEFT_MOTOR_PIN_1, REAR_LEFT_MOTOR_PIN_2, pwmFrequency),
+    new Motor(REAR_RIGHT_MOTOR_PIN_1, REAR_RIGHT_MOTOR_PIN_2, pwmFrequency),
+    new Motor(FRONT_LEFT_MOTOR_PIN_1, FRONT_LEFT_MOTOR_PIN_2, pwmFrequency),
+    new Motor(FRONT_RIGHT_MOTOR_PIN_1, FRONT_RIGHT_MOTOR_PIN_2, pwmFrequency)
   };
 
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
@@ -79,7 +76,7 @@ void setup() {
   driveMotor = new DriveMotor(baseMotor, logger);
 
   //Steering Motor
-  steeringMotor = new SteeringMotor(new Motor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2), STEERING_MOTOR_RELAY_PIN);
+  steeringMotor = new SteeringMotor(STEERING_MOTOR_PIN_1, STEERING_MOTOR_PIN_2, STEERING_MOTOR_RELAY_PIN);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position){
     logger->info("Steering Position: " + String(position));

@@ -3,15 +3,15 @@
 
 #include "Arduino.h"
 #include "AbstractMotor.h"
-#include "../vendor/CytronMotorDriver.h"
 
 class Motor : public AbstractMotor {
     private:
-        CytronMD* motor;
+    int pwmPin;
+    int directionPin;
+    int pwmFrequency;
 
     public:
-        Motor(int pin1, int pin2);
-        ~Motor();
+        Motor(int pwmPin, int directionPin, int pwmFrequency);
         void setSpeed(int speed);
 };
 

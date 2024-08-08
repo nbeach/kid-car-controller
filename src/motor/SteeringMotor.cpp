@@ -1,20 +1,27 @@
 #include "SteeringMotor.h"
 
-#include "AbstractMotor.h"
-
-SteeringMotor::SteeringMotor(AbstractMotor* motor, int relayPin) {
-    this->motor = motor;
-    this->motorRelayPin = relayPin;
+SteeringMotor::SteeringMotor(int pwmPin, int directionPin, int relayPin) {
+    this->pwmPin = pwmPin;
+    this->directionPin = directionPin;
+    this->relayPin = relayPin;
     pinMode(relayPin, OUTPUT);
 }
 
-SteeringMotor::~SteeringMotor() {
-   delete motor;
-}
-
 void SteeringMotor::setSpeed(int speed) {
-    digitalWrite(this->motorRelayPin, speed != 0 ? HIGH : LOW);
-    motor->setSpeed(speed);
+    if (speed > 255) {
+        speed = 255;
+    } else if (speed < -255) {
+        speed = -255;
+    }
+
+    if (speed >= 0) {
+        analogWrite(this->pwmPin, speed);
+        digitalWrite(this->directionPin, LOW);
+    } else {
+        analogWrite(this->pwmPin, -speed);
+        digitalWrite(this->directionPin, HIGH);
+    }
+    digitalWrite(this->relayPin, speed != 0 ? HIGH : LOW);
 }
 
 
