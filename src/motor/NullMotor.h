@@ -7,11 +7,11 @@
 
 class NullMotor : public AbstractMotor {
     private:
-    AbstractLogger* logger;
+        AbstractLogger* logger;
 
     public:
-    NullMotor(AbstractLogger* logger);
-    void setSpeed(int speed);
+        NullMotor(AbstractLogger* logger);
+        void setSpeed(int speed);
 };
 
 #endif

@@ -7,12 +7,13 @@
 
 class SerialLogger : public AbstractLogger {
     public:
-    SerialLogger(int baud) {
-        Serial.begin(baud);
-    }
-    void info(String text) {
-        Serial.println(text);
-    }
+        SerialLogger(int baud) {
+            Serial.begin(baud);
+        }
+        
+        void info(String text) {
+            Serial.println(text);
+        }
 };
 
 #endif

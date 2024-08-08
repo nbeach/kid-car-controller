@@ -6,7 +6,7 @@
 
 class NullLogger : public AbstractLogger {
     public:
-    void info(String text) {}
+        void info(String text) {}
 };
 
 #endif

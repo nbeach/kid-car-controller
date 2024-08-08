@@ -7,8 +7,8 @@
 
 class WirelessControllerThrottle : public AbstractThrottle {
     private:
-    WirelessController* controller;
-    int throttleAxis;
+        WirelessController* controller;
+        int throttleAxis;
 
     public:
         WirelessControllerThrottle(WirelessController* controller, int throttleAxis);

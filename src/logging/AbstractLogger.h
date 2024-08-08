@@ -5,7 +5,7 @@
 
 class AbstractLogger {
     public:
-    virtual void info(String text);
+        virtual void info(String text);
 };
 
 #endif

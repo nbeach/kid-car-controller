@@ -6,13 +6,13 @@
 
 class SteeringMotor : public AbstractMotor {
     private:
-    int pwmPin;
-    int directionPin;
-    int relayPin;
+        int pwmPin;
+        int directionPin;
+        int relayPin;
 
     public:
-    SteeringMotor(int pwmPin, int directionPin, int relayPin);
-    void setSpeed(int speed);
+        SteeringMotor(int pwmPin, int directionPin, int relayPin);
+        void setSpeed(int speed);
 };
 
 #endif

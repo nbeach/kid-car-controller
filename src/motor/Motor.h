@@ -7,15 +7,15 @@
 
 class Motor : public AbstractMotor {
     private:
-    int pwmPin;
-    int directionPin;
-    int pwmFrequency;
-    AVR_PWM* pwmControl;
+        int pwmPin;
+        int directionPin;
+        int pwmFrequency;
+        AVR_PWM* pwmControl;
 
     public:
-    Motor(int pwmPin, int directionPin, int pwmFrequency);
-    ~Motor();
-    void setSpeed(int speed);
+        Motor(int pwmPin, int directionPin, int pwmFrequency);
+        ~Motor();
+        void setSpeed(int speed);
 };
 
 #endif

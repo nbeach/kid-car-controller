@@ -5,20 +5,20 @@
 
 template <typename T>
 class SettingSelector {
-private:
-    void (*callback)(T) = NULL;
-    int settingCount;
-    T* settings;
-    int currentSettingIndex;
-    void emitChange();
+    private:
+        void (*callback)(T) = NULL;
+        int settingCount;
+        T* settings;
+        int currentSettingIndex;
+        void emitChange();
 
-public:
-    SettingSelector(T* settings, int count, int defaultIndex);
-    ~SettingSelector();
-    void onChange(void (*func)(T));
-    bool increase();
-    bool decrease();
-    T currentSetting();
+    public:
+        SettingSelector(T* settings, int count, int defaultIndex);
+        ~SettingSelector();
+        void onChange(void (*func)(T));
+        bool increase();
+        bool decrease();
+        T currentSetting();
 };
 
 template <typename T> SettingSelector<T>::SettingSelector(T* settings, int count, int defaultIndex) {
