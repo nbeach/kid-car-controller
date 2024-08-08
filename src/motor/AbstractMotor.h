@@ -1,7 +1,7 @@
 #ifndef AbstractMotor_h
 #define AbstractMotor_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 class AbstractMotor {
     public:

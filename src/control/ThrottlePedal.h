@@ -1,7 +1,7 @@
 #ifndef ThrottlePedal_h
 #define ThrottlePedal_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractThrottle.h"
 #include "../logging/AbstractLogger.h"
 

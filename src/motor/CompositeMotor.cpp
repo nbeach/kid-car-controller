@@ -1,7 +1,5 @@
 #include "CompositeMotor.h"
 
-#include "Arduino.h"
-
 CompositeMotor::CompositeMotor(AbstractMotor** motors, int count, AbstractLogger* logger) {
     this->motors = motors;
     this->count = count;

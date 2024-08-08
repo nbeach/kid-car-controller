@@ -1,7 +1,7 @@
 #ifndef SteeringMotor_h
 #define SteeringMotor_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractMotor.h"
 
 class SteeringMotor : public AbstractMotor {

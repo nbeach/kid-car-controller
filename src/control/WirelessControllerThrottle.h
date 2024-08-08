@@ -1,7 +1,7 @@
 #ifndef WirelessControllerThrottle_h
 #define WirelessControllerThrottle_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractThrottle.h"
 #include "WirelessController.h"
 

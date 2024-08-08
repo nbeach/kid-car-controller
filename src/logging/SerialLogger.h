@@ -1,7 +1,7 @@
 #ifndef SerialLogger_h
 #define SerialLogger_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "./AbstractLogger.h"
 

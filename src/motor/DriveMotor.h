@@ -1,7 +1,7 @@
 #ifndef DriveMotor_h
 #define DriveMotor_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractMotor.h"
 #include "SpeedRamper.h"
 #include "../logging/AbstractLogger.h"

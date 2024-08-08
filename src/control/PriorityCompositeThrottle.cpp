@@ -1,7 +1,5 @@
 #include "PriorityCompositeThrottle.h"
 
-#include "Arduino.h"
-
 PriorityCompositeThrottle::PriorityCompositeThrottle(AbstractThrottle* primary, AbstractThrottle* secondary) {
     this->primary = primary;
     this->secondary = secondary;

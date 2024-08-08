@@ -1,7 +1,7 @@
 #ifndef Motor_h
 #define Motor_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractMotor.h"
 #include "../vendor/AVR_PWM.h"
 

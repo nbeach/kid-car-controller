@@ -1,7 +1,5 @@
 #include "WirelessControllerThrottle.h"
 
-#include "Arduino.h"
-
 WirelessControllerThrottle::WirelessControllerThrottle(WirelessController* controller, int throttleAxis) {
     this->controller = controller;
     this->throttleAxis = throttleAxis;

@@ -1,7 +1,7 @@
 #ifndef SettingSelector_h
 #define SettingSelector_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 template <typename T>
 class SettingSelector {

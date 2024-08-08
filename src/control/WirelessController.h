@@ -1,7 +1,7 @@
 #ifndef WirelessController_h
 #define WirelessController_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "../vendor/Cytron_PS2Shield.h"
 
 enum {

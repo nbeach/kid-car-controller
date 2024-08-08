@@ -1,7 +1,7 @@
 #ifndef AbstractLogger_h
 #define AbstractLogger_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 class AbstractLogger {
     public:

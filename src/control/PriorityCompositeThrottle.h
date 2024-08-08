@@ -1,7 +1,7 @@
 #ifndef PriorityCompositeThrottle_h
 #define PriorityCompositeThrottle_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractThrottle.h"
 
 class PriorityCompositeThrottle : public AbstractThrottle {

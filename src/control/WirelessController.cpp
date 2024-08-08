@@ -1,8 +1,5 @@
 #include "WirelessController.h"
 
-#include "Arduino.h"
-
-
 void WirelessController::maybeEndVibration() {
   if(vibrationStartedTime == -1) return;
   int now = millis();

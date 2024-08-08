@@ -1,7 +1,7 @@
 #ifndef AbstractThrottle_h
 #define AbstractThrottle_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 class AbstractThrottle {
     public:

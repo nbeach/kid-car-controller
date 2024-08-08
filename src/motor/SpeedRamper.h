@@ -1,7 +1,7 @@
 #ifndef SpeedRamper_h
 #define SpeedRamper_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 class SpeedRamper {
     private:

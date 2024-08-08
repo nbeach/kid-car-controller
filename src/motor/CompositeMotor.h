@@ -1,7 +1,7 @@
 #ifndef CompositeMotor_h
 #define CompositeMotor_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "AbstractMotor.h"
 #include "../logging/AbstractLogger.h"
 
