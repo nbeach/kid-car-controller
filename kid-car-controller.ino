@@ -14,6 +14,7 @@
 #include "src/logging/AbstractLogger.h"
 #include "src/logging/SerialLogger.h"
 #include "src/logging/NullLogger.h"
+#include "src/vendor/PWM/PWM.h"
 
 const bool DISABLE_DRIVE_MOTORS = false;
 const bool DISABLE_LOGGING = true;
@@ -34,7 +35,7 @@ const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
 const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A4;
 const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
-const int DRIVE_MOTOR_PWM_FREQUENCY = NULL;
+const int32_t DRIVE_MOTOR_PWM_FREQUENCY = NULL;
 const int DRIVE_MOTOR_COUNT = 4;
 const uint8_t REAR_LEFT_MOTOR_PWM_PIN = 9;
 const uint8_t REAR_LEFT_MOTOR_DIRECTION_PIN = 2;
@@ -59,6 +60,10 @@ void setup() {
     //Set PWM frequency to 3921.16Hz
     TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
     TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
+  } else {
+    InitTimersSafe();
+    Timer1_SetFrequency(DRIVE_MOTOR_PWM_FREQUENCY);
+    Timer2_SetFrequency(DRIVE_MOTOR_PWM_FREQUENCY);
   }
 
   logger = DISABLE_LOGGING 
@@ -70,10 +75,10 @@ void setup() {
 
   //Drive Motor
   AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
-    new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY)
+    new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN),
+    new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN),
+    new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN),
+    new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN)
   };
 
   AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
