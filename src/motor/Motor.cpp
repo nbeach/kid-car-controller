@@ -22,7 +22,7 @@ void Motor::setSpeed(int speed) {
         speed = -255;
     }
 
-    pwmControl->setPWM(pwmPin, pwmFrequency, (speed >= 0 ? speed : -speed) / 255 * 100);
+    pwmControl->setPWM(pwmPin, pwmFrequency, (speed >= 0 ? speed : -speed) / 255.0f * 100);
     digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
 }
 
