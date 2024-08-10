@@ -64,17 +64,19 @@ void setup() {
   controller = new WirelessController(CONTROLLER_RX_PIN, CONTROLLER_TX_PIN, CONTROLLER_BAUD);
 
   //Drive Motor
-  AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
-    new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
-    new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY)
-  };
+  AbstractMotor* baseMotor;
+  if(DISABLE_DRIVE_MOTORS) {
+    baseMotor = (AbstractMotor*)new NullMotor(logger);
+  } else {
+    AbstractMotor** motors = new AbstractMotor*[DRIVE_MOTOR_COUNT] {
+      new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+      new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+      new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+      new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY)
+    };
 
-  AbstractMotor* baseMotor = DISABLE_DRIVE_MOTORS
-    ? (AbstractMotor*)new NullMotor(logger)
-    : (AbstractMotor*)new CompositeMotor(motors, DRIVE_MOTOR_COUNT, logger);
-
+    baseMotor = (AbstractMotor*)new CompositeMotor(motors, DRIVE_MOTOR_COUNT, logger);
+  }
   driveMotor = new DriveMotor(baseMotor, logger);
 
   //Steering Motor
