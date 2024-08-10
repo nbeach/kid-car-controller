@@ -1,6 +1,6 @@
 
 # Pin Layout
-- 02 - PS2 RX // Timer 3 // Effected by timer 3 freq adjustment?
+- 02 - PS2 RX // Timer 3
 - 09 - PS2 TX // Timer 2
 - 10 - Steering PWM // Timer 2
 - 12 - Steering Dir
@@ -9,7 +9,7 @@
 - 11 - RR PWM // Timer 1
 - 13 - RR Dir
 - 05 - FL PWM // Timer 3
-- 08 - FL Dir // Disabled by timer 4 freq adjustment?
+- 08 - FL Dir 
 - 06 - FR PWM // Timer 4
 - 07 - FR Dir
 
@@ -39,4 +39,3 @@
 - 46 (Timer 5 / 16 bit)
 - 45 (Timer 5 / 16 bit)
 - 44 (Timer 5 / 16 bit)
-

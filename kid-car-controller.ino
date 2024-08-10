@@ -34,7 +34,7 @@ const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
 const int THROTTLE_PEDAL_FORWARD_ANALOG_PIN = A4;
 const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
-const int DRIVE_MOTOR_PWM_FREQUENCY = NULL;
+const int DRIVE_MOTOR_PWM_FREQUENCY = 16000;
 const int DRIVE_MOTOR_COUNT = 4;
 const uint8_t REAR_LEFT_MOTOR_PWM_PIN = 3;
 const uint8_t REAR_LEFT_MOTOR_DIRECTION_PIN = 4;
@@ -55,15 +55,10 @@ DriveMotor* driveMotor;
 AbstractLogger* logger;
 
 void setup() {
-  if(DRIVE_MOTOR_PWM_FREQUENCY == NULL) {
-    //Set PWM frequency to 3921.16Hz
-    TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
-    TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
-  }
-
+  if(!DISABLE_LOGGING) Serial.begin(115200);
   logger = DISABLE_LOGGING 
     ? (AbstractLogger*)new NullLogger() 
-    : (AbstractLogger*)new SerialLogger(115200);
+    : (AbstractLogger*)new SerialLogger();
 
   //Wireless Controller
   controller = new WirelessController(CONTROLLER_RX_PIN, CONTROLLER_TX_PIN, CONTROLLER_BAUD);
@@ -147,5 +142,3 @@ void loop() {
   throttle->poll();
   driveMotor->tick();
 }
-
-

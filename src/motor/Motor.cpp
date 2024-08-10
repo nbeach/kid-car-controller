@@ -11,11 +11,11 @@ Motor::Motor(uint8_t pwmPin, uint8_t directionPin, int pwmFrequency) {
     digitalWrite(pwmPin, LOW);
     digitalWrite(directionPin, LOW);
 
-    pwmControl = pwmFrequency == NULL ? NULL : new AVR_PWM(pwmPin, pwmFrequency, 0);
+    pwmControl = new PWM(pwmPin, pwmFrequency);
 }
 
 Motor::~Motor() {
-     if(pwmControl != NULL) delete pwmControl;
+     delete pwmControl;
 }
 
 void Motor::setSpeed(int speed) {
@@ -25,12 +25,7 @@ void Motor::setSpeed(int speed) {
         speed = -255;
     }
 
-     if(pwmControl == NULL) {
-        analogWrite(pwmPin, speed >= 0 ? speed : -speed);
-     } else {
-        pwmControl->setPWM(pwmPin, pwmFrequency, (speed >= 0 ? speed : -speed) / 255.0f * 100);
-     }
-
+    pwmControl->setDutyCycle((speed >= 0 ? speed : -speed) / 255.0f * 100);
     digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
 }
 

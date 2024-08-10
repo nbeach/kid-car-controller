@@ -7,9 +7,7 @@
 
 class SerialLogger : public AbstractLogger {
     public:
-        SerialLogger(int baud) {
-            Serial.begin(baud);
-        }
+        SerialLogger() {}
         
         void info(String text) {
             Serial.println(text);
