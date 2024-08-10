@@ -16,18 +16,18 @@
 #include "src/logging/NullLogger.h"
 
 const bool DISABLE_DRIVE_MOTORS = false;
-const bool DISABLE_LOGGING = true;
+const bool DISABLE_LOGGING = false;
 
 const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const uint8_t STEERING_MOTOR_PWM_PIN = 5;
-const uint8_t STEERING_MOTOR_DIRECTION_PIN = 13;
+const uint8_t STEERING_MOTOR_PWM_PIN = 10;
+const uint8_t STEERING_MOTOR_DIRECTION_PIN = 12;
 const uint8_t STEERING_MOTOR_RELAY_PIN = A3;
 
-const uint8_t CONTROLLER_RX_PIN = 0;
-const uint8_t CONTROLLER_TX_PIN = 1;
+const uint8_t CONTROLLER_RX_PIN = 2;
+const uint8_t CONTROLLER_TX_PIN = 9;
 const uint32_t CONTROLLER_BAUD = 9600;
 
 const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
@@ -36,14 +36,14 @@ const int THROTTLE_PEDAL_REVERSE_ANALOG_PIN = A2;
 
 const int DRIVE_MOTOR_PWM_FREQUENCY = NULL;
 const int DRIVE_MOTOR_COUNT = 4;
-const uint8_t REAR_LEFT_MOTOR_PWM_PIN = 9;
-const uint8_t REAR_LEFT_MOTOR_DIRECTION_PIN = 2;
-const uint8_t REAR_RIGHT_MOTOR_PWM_PIN = 10;
-const uint8_t REAR_RIGHT_MOTOR_DIRECTION_PIN = 7;
-const uint8_t FRONT_LEFT_MOTOR_PWM_PIN = 3;
-const uint8_t FRONT_LEFT_MOTOR_DIRECTION_PIN = 4;
-const uint8_t FRONT_RIGHT_MOTOR_PWM_PIN = 11;
-const uint8_t FRONT_RIGHT_MOTOR_DIRECTION_PIN = 12;
+const uint8_t REAR_LEFT_MOTOR_PWM_PIN = 3;
+const uint8_t REAR_LEFT_MOTOR_DIRECTION_PIN = 4;
+const uint8_t REAR_RIGHT_MOTOR_PWM_PIN = 11;
+const uint8_t REAR_RIGHT_MOTOR_DIRECTION_PIN = 13;
+const uint8_t FRONT_LEFT_MOTOR_PWM_PIN = 5;
+const uint8_t FRONT_LEFT_MOTOR_DIRECTION_PIN = 8;
+const uint8_t FRONT_RIGHT_MOTOR_PWM_PIN = 6;
+const uint8_t FRONT_RIGHT_MOTOR_DIRECTION_PIN = 7;
 
 WirelessController* controller;
 PriorityCompositeThrottle* throttle;
