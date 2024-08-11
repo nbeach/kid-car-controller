@@ -15,6 +15,8 @@
 #include "src/logging/SerialLogger.h"
 #include "src/logging/NullLogger.h"
 
+LogLevel DEFAULT_LOG_LEVEL = LogLevel::INFO;
+
 const bool DISABLE_DRIVE_MOTORS = false;
 const bool DISABLE_LOGGING = false;
 
@@ -55,8 +57,8 @@ AbstractLogger* logger;
 void setup() {
   if(!DISABLE_LOGGING) Serial.begin(115200);
   logger = DISABLE_LOGGING 
-    ? (AbstractLogger*)new NullLogger() 
-    : (AbstractLogger*)new SerialLogger(LogLevel::INFO);
+    ? (AbstractLogger*)new NullLogger(DEFAULT_LOG_LEVEL)
+    : (AbstractLogger*)new SerialLogger(DEFAULT_LOG_LEVEL);
 
   //Wireless Controller
   controller = new WirelessController(CONTROLLER_BAUD);
@@ -133,6 +135,12 @@ void setup() {
     logger->info("Throttle Pedal Disabled: " + String(disabled));
     controller->vibrate(disabled ? VIBRATION_HEAVY : VIBRATION_LIGHT);
   });
+
+  //Log Level
+  // controller->onButtonPressed(PS2_SELECT, [](){
+  //   logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR : logger->getLogLevel() + 1);
+  //   logger->info("Log Level: " + logger->getLogLevelName());
+  // });
 
   logger->info("Init Complete");
 }

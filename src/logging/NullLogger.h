@@ -6,11 +6,12 @@
 
 class NullLogger : public AbstractLogger {
     public:
-        void error(String text) {}
-        void info(String text) {}
-        void debug(String text) {}
-        void trace(String text) {}
-        void setLogLevel(LogLevel level) {}
+        using AbstractLogger::AbstractLogger;
+
+        void _error(String text) {}
+        void _info(String text) {}
+        void _debug(String text) {}
+        void _trace(String text) {}
 };
 
 #endif

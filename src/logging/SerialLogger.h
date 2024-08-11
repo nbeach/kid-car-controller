@@ -6,31 +6,23 @@
 #include "./AbstractLogger.h"
 
 class SerialLogger : public AbstractLogger {
-    private:
-        LogLevel logLevel;
     public:
-        SerialLogger(LogLevel logLevel) {
-            this->logLevel = logLevel;
-        }
-        
-        void error(String text) {
-            if(logLevel >= LogLevel::ERROR) Serial.println("ERROR: " + text);
+        using AbstractLogger::AbstractLogger;
+
+        void _error(String text) {
+            Serial.println("ERROR: " + text);
         }
 
-        void info(String text) {
-            if(logLevel >= LogLevel::INFO) Serial.println("INFO: " + text);
+        void _info(String text) {
+            Serial.println("INFO: " + text);
         }
 
-        void debug(String text) {
-            if(logLevel >= LogLevel::DEBUG) Serial.println("DEBUG: " + text);
+        void _debug(String text) {
+            Serial.println("DEBUG: " + text);
         }
 
-        void trace(String text) {
-            if(logLevel >= LogLevel::TRACE) Serial.println("TRACE: " + text);
-        }
-
-        void setLogLevel(LogLevel level) {
-            this->logLevel = logLevel;
+        void _trace(String text) {
+            Serial.println("TRACE: " + text);
         }
 };
 
