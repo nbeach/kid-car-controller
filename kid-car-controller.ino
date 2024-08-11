@@ -14,10 +14,9 @@
 #include "src/logging/AbstractLogger.h"
 #include "src/logging/SerialLogger.h"
 #include "src/logging/NullLogger.h"
-#include "src/vendor/PWM/PWM.h"
 
-const bool DISABLE_DRIVE_MOTORS = false;
-const bool DISABLE_LOGGING = true;
+const int DISABLE_DRIVE_MOTORS = false;
+const int DISABLE_LOGGING = true;
 
 const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
@@ -60,11 +59,7 @@ void setup() {
     //Set PWM frequency to 3921.16Hz
     TCCR1B = TCCR1B & B11111000 | B00000010;  //Pins 9 and 10
     TCCR2B = TCCR2B & B11111000 | B00000010;  //Pins 3 and 11
-  } else {
-    InitTimersSafe();
-    Timer1_SetFrequency(DRIVE_MOTOR_PWM_FREQUENCY);
-    Timer2_SetFrequency(DRIVE_MOTOR_PWM_FREQUENCY);
-  }
+  } 
 
   logger = DISABLE_LOGGING 
     ? (AbstractLogger*)new NullLogger() 

@@ -1,6 +1,5 @@
 #include "Motor.h"
 #include "AbstractMotor.h"
-#include "../vendor/PWM/PWM.h"
 
 Motor::Motor(uint8_t pwmPin, uint8_t directionPin) {
     this->pwmPin = pwmPin;
@@ -20,7 +19,7 @@ void Motor::setSpeed(int speed) {
         speed = -255;
     }
 
-    pwmWrite(pwmPin, speed >= 0 ? speed : -speed);
+    analogWrite(pwmPin, speed >= 0 ? speed : -speed);
     digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
 }
 
