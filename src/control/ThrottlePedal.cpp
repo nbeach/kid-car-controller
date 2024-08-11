@@ -22,7 +22,7 @@ int ThrottlePedal::throttlePosition() {
 }
 
 int ThrottlePedal::direction() {
-    this->logger->info("forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttle: " + String(analogRead(throttlePin)));
+//     this->logger->info("forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttle: " + String(analogRead(throttlePin)));
     if(digitalRead(forwardPin) == LOW) {
         return 1;
     } else if(digitalRead(reversePin) == LOW) {

@@ -2,7 +2,7 @@
 #define WirelessController_h
 
 #include <Arduino.h>
-#include "../vendor/Cytron_PS2Shield.h"
+#include "../vendor/Serial2_PS2Shield.h"
 
 enum {
     VIBRATION_HEAVY,
@@ -12,7 +12,7 @@ enum {
 
 class WirelessController {
     protected:
-        Cytron_PS2Shield ps2;
+        Serial2_PS2Shield ps2;
         int buttonStates[26];
         int axisStates[26];
         void (*buttonCallbacks[26])();
@@ -23,7 +23,7 @@ class WirelessController {
         int to256Position(int rawPosition);
 
     public:
-        WirelessController(uint8_t rxPin, uint8_t txPin, uint32_t baud);
+        WirelessController(uint32_t baud);
         void poll();
         void pollButtonState(int button);
         void pollAxisState(int axis);

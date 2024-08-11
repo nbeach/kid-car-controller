@@ -1,24 +1,8 @@
-/*
-Original written by:
-            Cytron Technologies
-
-Modified:
-  29/06/15  Idris, Cytron Technologies    - Point to IDE SoftwareSerial
-                                          - Restructure the code style to follow standard Arduino library
-*/
-
-#ifndef Cytron_PS2Shield_h
-#define Cytron_PS2Shield_h
+#ifndef Serial2_PS2Shield_h
+#define Serial2_PS2Shield_h
 
 #include "Arduino.h"
-#include <SoftwareSerial.h>
 
-// Arduino Leonardo
-#if defined (__AVR_ATmega32U4__)
-  #define Serial Serial1
-#else 
-  #define Serial Serial
-#endif
 
 // Define PS2 button to number
 enum {
@@ -61,18 +45,15 @@ enum {
   PS2_BUTTON_JOYSTICK
 };
 
-class Cytron_PS2Shield
+class Serial2_PS2Shield
 {
   public:
 	  boolean SERIAL_ERR;
 	  uint8_t ps_data[6];
     uint8_t _txpin, _rxpin;
 
-    // Software Serial
-    Cytron_PS2Shield(uint8_t rxpin, uint8_t txpin);
-    // Hardware Serial
-    Cytron_PS2Shield();
-  
+    Serial2_PS2Shield();
+
     void begin(uint32_t baudrate);
     uint8_t readButton(uint8_t key);
     boolean readAllButton();
@@ -80,8 +61,6 @@ class Cytron_PS2Shield
     void reset(uint8_t reset);
 
   protected:
-    boolean hardwareSerial;
-    SoftwareSerial *PS2Serial;
     void write(uint8_t data);
     uint8_t read(void);
 };

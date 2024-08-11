@@ -22,12 +22,10 @@ const int SPEED_LIMIT_COUNT = 11;
 int* SPEED_LIMITS = new int[SPEED_LIMIT_COUNT] { 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256 };
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
-const uint8_t STEERING_MOTOR_PWM_PIN = 10;
+const uint8_t STEERING_MOTOR_PWM_PIN = 9;
 const uint8_t STEERING_MOTOR_DIRECTION_PIN = 12;
 const uint8_t STEERING_MOTOR_RELAY_PIN = A3;
 
-const uint8_t CONTROLLER_RX_PIN = 2;
-const uint8_t CONTROLLER_TX_PIN = 9;
 const uint32_t CONTROLLER_BAUD = 9600;
 
 const int THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN = A0;
@@ -61,7 +59,7 @@ void setup() {
     : (AbstractLogger*)new SerialLogger();
 
   //Wireless Controller
-  controller = new WirelessController(CONTROLLER_RX_PIN, CONTROLLER_TX_PIN, CONTROLLER_BAUD);
+  controller = new WirelessController(CONTROLLER_BAUD);
 
   //Drive Motor
   AbstractMotor* baseMotor;

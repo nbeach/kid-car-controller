@@ -1,8 +1,6 @@
 
 # Pin Layout
-- 02 - PS2 RX // Timer 3
-- 09 - PS2 TX // Timer 2
-- 10 - Steering PWM // Timer 2
+- 09 - Steering PWM // Timer 2
 - 12 - Steering Dir
 - 03 - RL PWM // Timer 3
 - 04 - RL Dir

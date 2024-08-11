@@ -43,7 +43,6 @@ class PWM {
 
         if(duty > 1023) duty = 2023;
 
-        Serial.println(duty);
         if(isTimer1(this->pin)) {
             Timer1.pwm(this->pin, duty);
         } else if(isTimer3(this->pin)) {
