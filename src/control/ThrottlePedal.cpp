@@ -32,7 +32,6 @@ int ThrottlePedal::direction() {
 }
 
 int ThrottlePedal::getPosition() {
-    this->logger->debug("ThrottlePedal - forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttlePin: " + String(analogRead(throttlePin)));
-
+//     this->logger->debug("ThrottlePedal - forwardPin: " + String(digitalRead(forwardPin)) + " - reversePin: " + String(digitalRead(reversePin)) + " - throttlePin: " + String(analogRead(throttlePin)));
     return throttlePosition() * direction();
 }

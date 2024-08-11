@@ -138,10 +138,10 @@ void setup() {
   });
 
   //Log Level
-  // controller->onButtonPressed(PS2_SELECT, [](){
-  //   logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR : logger->getLogLevel() + 1);
-  //   logger->info("Log Level: " + logger->getLogLevelName());
-  // });
+  controller->onButtonPressed(PS2_SELECT, [](){
+    logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR : logger->getLogLevel() + 1);
+    logger->info("Log Level: " + logger->getLogLevelName());
+  });
 
   logger->info("Init Complete");
 }
