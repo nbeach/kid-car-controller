@@ -56,7 +56,7 @@ void setup() {
   if(!DISABLE_LOGGING) Serial.begin(115200);
   logger = DISABLE_LOGGING 
     ? (AbstractLogger*)new NullLogger() 
-    : (AbstractLogger*)new SerialLogger();
+    : (AbstractLogger*)new SerialLogger(LogLevel::INFO);
 
   //Wireless Controller
   controller = new WirelessController(CONTROLLER_BAUD);
