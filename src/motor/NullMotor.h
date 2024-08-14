@@ -3,10 +3,8 @@
 
 #include "../logging/AbstractLogger.h"
 #include "AbstractMotor.h"
-#include <Arduino.h>
 
 class NullMotor : public AbstractMotor {
-private:
   AbstractLogger *logger;
 
 public:

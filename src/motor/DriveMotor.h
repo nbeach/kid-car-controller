@@ -4,10 +4,8 @@
 #include "../logging/AbstractLogger.h"
 #include "AbstractMotor.h"
 #include "SpeedRamper.h"
-#include <Arduino.h>
 
 class DriveMotor : public AbstractMotor {
-private:
   AbstractMotor *motor;
   SpeedRamper *speedRamper;
   int speedLimit = 256;

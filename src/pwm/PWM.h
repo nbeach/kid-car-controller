@@ -5,11 +5,9 @@
 #include "../vendor/TimerFour/TimerFour.h"
 #include "../vendor/TimerOne/TimerOne.h"
 #include "../vendor/TimerThree/TimerThree.h"
-#include <Arduino.h>
 #include <stdint.h>
 
 class PWM {
-private:
   uint8_t pin;
 
   bool isTimer1(uint8_t pin) { return pin == 11 || pin == 12; }

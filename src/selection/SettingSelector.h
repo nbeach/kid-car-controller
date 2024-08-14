@@ -1,10 +1,7 @@
 #ifndef SettingSelector_h
 #define SettingSelector_h
 
-#include <Arduino.h>
-
 template <typename T> class SettingSelector {
-private:
   void (*callback)(T) = NULL;
   int settingCount;
   T *settings;

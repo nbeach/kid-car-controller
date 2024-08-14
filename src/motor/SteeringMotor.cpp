@@ -1,4 +1,5 @@
 #include "SteeringMotor.h"
+#include <Arduino.h>
 
 SteeringMotor::SteeringMotor(uint8_t pwmPin, uint8_t directionPin,
                              uint8_t relayPin) {

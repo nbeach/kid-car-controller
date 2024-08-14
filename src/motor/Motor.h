@@ -3,11 +3,9 @@
 
 #include "../pwm/PWM.h"
 #include "AbstractMotor.h"
-#include <Arduino.h>
 #include <stdint.h>
 
 class Motor : public AbstractMotor {
-private:
   uint8_t pwmPin;
   uint8_t directionPin;
   int pwmFrequency;

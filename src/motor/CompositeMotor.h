@@ -3,10 +3,8 @@
 
 #include "../logging/AbstractLogger.h"
 #include "AbstractMotor.h"
-#include <Arduino.h>
 
 class CompositeMotor : public AbstractMotor {
-private:
   AbstractMotor **motors;
   int count;
   AbstractLogger *logger;

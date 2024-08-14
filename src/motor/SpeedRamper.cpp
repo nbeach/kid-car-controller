@@ -1,5 +1,6 @@
 #include "SpeedRamper.h"
 #include "AbstractMotor.h"
+#include <Arduino.h>
 
 SpeedRamper::SpeedRamper(double decelerationRampingRate) {
   this->decelerationRampingRate = decelerationRampingRate;

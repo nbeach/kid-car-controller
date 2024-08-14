@@ -1,10 +1,7 @@
 #ifndef SpeedRamper_h
 #define SpeedRamper_h
 
-#include <Arduino.h>
-
 class SpeedRamper {
-private:
   double decelerationRampingRate;
   int currentSpeed = 0;
   int targetSpeed = 0;
