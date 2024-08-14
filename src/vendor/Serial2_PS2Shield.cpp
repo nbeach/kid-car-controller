@@ -40,8 +40,7 @@ uint8_t Serial2_PS2Shield::readButton(uint8_t key) {
 
 boolean Serial2_PS2Shield::readAllButton() {
 	uint8_t nbyte; 
-	uint32_t waitcount;
-	
+
 	write(PS2_BUTTON_JOYSTICK);
 
     nbyte = Serial2.readBytes(ps_data, 6);

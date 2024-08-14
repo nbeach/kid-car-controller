@@ -6,6 +6,7 @@
 class AbstractThrottle {
 public:
   virtual int getPosition();
+  virtual ~AbstractThrottle() {}
 };
 
 #endif
