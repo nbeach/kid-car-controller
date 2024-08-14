@@ -9,13 +9,10 @@ class SerialLogger : public AbstractLogger {
 public:
   using AbstractLogger::AbstractLogger;
 
-  void _error(String text) { Serial.println("ERROR: " + text); }
-
-  void _info(String text) { Serial.println("INFO: " + text); }
-
-  void _debug(String text) { Serial.println("DEBUG: " + text); }
-
-  void _trace(String text) { Serial.println("TRACE: " + text); }
+  void _error(String text) override { Serial.println("ERROR: " + text); }
+  void _info(String text) override { Serial.println("INFO: " + text); }
+  void _debug(String text) override { Serial.println("DEBUG: " + text); }
+  void _trace(String text) override { Serial.println("TRACE: " + text); }
 };
 
 #endif

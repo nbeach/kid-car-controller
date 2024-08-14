@@ -8,10 +8,10 @@ class NullLogger : public AbstractLogger {
 public:
   using AbstractLogger::AbstractLogger;
 
-  void _error(String text) {}
-  void _info(String text) {}
-  void _debug(String text) {}
-  void _trace(String text) {}
+  void _error(String text) override {}
+  void _info(String text) override {}
+  void _debug(String text) override {}
+  void _trace(String text) override {}
 };
 
 #endif

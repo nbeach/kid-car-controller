@@ -17,8 +17,8 @@ class DriveMotor : public AbstractMotor {
 
 public:
   DriveMotor(AbstractMotor *motor, AbstractLogger *logger);
-  ~DriveMotor();
-  void setSpeed(int speed);
+  ~DriveMotor() override;
+  void setSpeed(int speed) override;
   void setSpeedLimit(int limit);
   bool toggleEmergencyStop();
   void tick();

@@ -19,7 +19,8 @@ protected:
   }
 
 public:
-  AbstractLogger(LogLevel logLevel) { this->logLevel = logLevel; }
+  explicit AbstractLogger(LogLevel logLevel) { this->logLevel = logLevel; }
+  virtual ~AbstractLogger() = default;
 
   void setLogLevel(LogLevel logLevel) { this->logLevel = logLevel; }
 

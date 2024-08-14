@@ -3,7 +3,6 @@
 
 #include "AbstractThrottle.h"
 #include "WirelessController.h"
-#include <Arduino.h>
 
 class WirelessControllerThrottle : public AbstractThrottle {
 private:
@@ -12,8 +11,8 @@ private:
 
 public:
   WirelessControllerThrottle(WirelessController *controller, int throttleAxis);
-  ~WirelessControllerThrottle();
-  int getPosition();
+  ~WirelessControllerThrottle() override;
+  int getPosition() override;
 };
 
 #endif

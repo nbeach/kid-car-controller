@@ -4,7 +4,7 @@
 class AbstractMotor {
 public:
   virtual void setSpeed(int speed);
-  virtual ~AbstractMotor() {}
+  virtual ~AbstractMotor() = default;
 };
 
 #endif

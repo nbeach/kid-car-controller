@@ -11,8 +11,8 @@ class CompositeMotor : public AbstractMotor {
 
 public:
   CompositeMotor(AbstractMotor **motors, int count, AbstractLogger *logger);
-  ~CompositeMotor();
-  void setSpeed(int speed);
+  ~CompositeMotor() override;
+  void setSpeed(int speed) override;
 };
 
 #endif

@@ -13,8 +13,8 @@ class Motor : public AbstractMotor {
 
 public:
   Motor(uint8_t pwmPin, uint8_t directionPin, int pwmFrequency);
-  ~Motor();
-  void setSpeed(int speed);
+  ~Motor() override;
+  void setSpeed(int speed) override;
 };
 
 #endif

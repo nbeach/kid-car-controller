@@ -8,8 +8,8 @@ class NullMotor : public AbstractMotor {
   AbstractLogger *logger;
 
 public:
-  NullMotor(AbstractLogger *logger);
-  void setSpeed(int speed);
+  explicit NullMotor(AbstractLogger *logger);
+  void setSpeed(int speed) override;
 };
 
 #endif

@@ -10,10 +10,12 @@
 class PWM {
   uint8_t pin;
 
-  bool isTimer1(uint8_t pin) { return pin == 11 || pin == 12; }
-  bool isTimer3(uint8_t pin) { return pin == 2 || pin == 3 || pin == 5; }
-  bool isTimer4(uint8_t pin) { return pin == 6 || pin == 7 || pin == 8; }
-  bool isTimer5(uint8_t pin) { return pin == 44 || pin == 45 || pin == 46; }
+  static bool isTimer1(uint8_t pin) { return pin == 11 || pin == 12; }
+  static bool isTimer3(uint8_t pin) { return pin == 2 || pin == 3 || pin == 5; }
+  static bool isTimer4(uint8_t pin) { return pin == 6 || pin == 7 || pin == 8; }
+  static bool isTimer5(uint8_t pin) {
+    return pin == 44 || pin == 45 || pin == 46;
+  }
 
 public:
   PWM(uint8_t pin, int frequency) {
@@ -22,7 +24,7 @@ public:
     setDutyCycle(0);
   }
 
-  void setFrequency(int frequency) {
+  void setFrequency(int frequency) const {
     int microseconds = 1000000.0f / frequency;
 
     if (isTimer1(this->pin)) {
@@ -36,7 +38,7 @@ public:
     }
   }
 
-  void setDutyCycle(int dutyCycle) {
+  void setDutyCycle(int dutyCycle) const {
     int duty = (dutyCycle / 100.0f) * 1023;
 
     if (duty > 1023)

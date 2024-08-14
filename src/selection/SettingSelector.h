@@ -2,16 +2,16 @@
 #define SettingSelector_h
 
 template <typename T> class SettingSelector {
-  void (*callback)(T) = NULL;
-  int settingCount;
+  void (*callback)(T) = nullptr;
+  int settingCount = 0;
   T *settings;
-  int currentSettingIndex;
+  int currentSettingIndex = 0;
   void emitChange();
 
 public:
   SettingSelector(T *settings, int count, int defaultIndex);
   ~SettingSelector();
-  void onChange(void (*func)(T));
+  void onChange(void (*callback)(T));
   bool increase();
   bool decrease();
   T currentSetting();

@@ -22,7 +22,7 @@ protected:
   int to256Position(int rawPosition);
 
 public:
-  WirelessController(uint32_t baud);
+  explicit WirelessController(uint32_t baud);
   void poll();
   void pollButtonState(int button);
   void pollAxisState(int axis);

@@ -3,10 +3,8 @@
 
 #include "../logging/AbstractLogger.h"
 #include "AbstractThrottle.h"
-#include <Arduino.h>
 
 class ThrottlePedal : public AbstractThrottle {
-private:
   int throttlePin;
   int forwardPin;
   int reversePin;
@@ -18,7 +16,7 @@ private:
 public:
   ThrottlePedal(int throttlePin, int forwardPin, int reversePin,
                 AbstractLogger *logger);
-  int getPosition();
+  int getPosition() override;
 };
 
 #endif

@@ -8,16 +8,16 @@ class PriorityCompositeThrottle : public AbstractThrottle {
 private:
   AbstractThrottle *primary;
   AbstractThrottle *secondary;
-  void (*callback)(int) = NULL;
+  void (*callback)(int) = nullptr;
   bool secondaryDisabled = false;
   int priorPosition = 0;
 
 public:
   PriorityCompositeThrottle(AbstractThrottle *primary,
                             AbstractThrottle *secondary);
-  ~PriorityCompositeThrottle();
+  ~PriorityCompositeThrottle() override;
   void onPositionChange(void (*func)(int));
-  int getPosition();
+  int getPosition() override;
   void poll();
   bool toggleDisableSecondary();
 };
