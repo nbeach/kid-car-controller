@@ -1,10 +1,11 @@
 #include "WirelessController.h"
 
 void WirelessController::maybeEndVibration() {
-  if(vibrationStartedTime == -1) return;
+  if (vibrationStartedTime == -1)
+    return;
   int now = millis();
   int vibrationEndTime = vibrationStartedTime + vibrationDuration;
-  if(now >= vibrationEndTime) {
+  if (now >= vibrationEndTime) {
     ps2.vibrate(2, 0);
     vibrationStartedTime = -1;
   }
@@ -14,9 +15,8 @@ int WirelessController::to256Position(int rawPosition) {
   return ((rawPosition - 128) * -2);
 }
 
-
 WirelessController::WirelessController(uint32_t baud) {
-  for(int i = 0; i < 26; i++) {
+  for (int i = 0; i < 26; i++) {
     buttonStates[i] = 1;
     axisStates[i] = 0;
     buttonCallbacks[i] = NULL;
@@ -58,12 +58,13 @@ void WirelessController::poll() {
 }
 
 void WirelessController::pollButtonState(int button) {
-  if(buttonCallbacks[button] == NULL) return;
+  if (buttonCallbacks[button] == NULL)
+    return;
 
   int newButtonState = ps2.readButton(button);
   bool buttonWasPressed = buttonStates[button] == 0;
   bool buttonIsReleased = newButtonState == 1;
-  if(buttonWasPressed && buttonIsReleased) {
+  if (buttonWasPressed && buttonIsReleased) {
     buttonCallbacks[button]();
   }
 
@@ -71,11 +72,12 @@ void WirelessController::pollButtonState(int button) {
 }
 
 void WirelessController::pollAxisState(int axis) {
-  if(axisCallbacks[axis] == NULL) return;
+  if (axisCallbacks[axis] == NULL)
+    return;
 
   int newAxisPoisition = to256Position(ps2.readButton(axis));
   int oldAxisPosition = axisStates[axis];
-  if(newAxisPoisition != oldAxisPosition) {
+  if (newAxisPoisition != oldAxisPosition) {
     axisCallbacks[axis](newAxisPoisition);
   }
 
@@ -91,13 +93,12 @@ void WirelessController::onButtonPressed(int button, void (*func)()) {
 }
 
 void WirelessController::onAxisChange(int axis, void (*func)(int)) {
-   axisCallbacks[axis] = func;
+  axisCallbacks[axis] = func;
 }
 
 void WirelessController::vibrate(int level) {
   vibrationStartedTime = millis();
   vibrationDuration = level == VIBRATION_HEAVY ? 250 : 175;
 
-  ps2.vibrate(2,  level == VIBRATION_HEAVY ? 200 : 100);
+  ps2.vibrate(2, level == VIBRATION_HEAVY ? 200 : 100);
 }
-

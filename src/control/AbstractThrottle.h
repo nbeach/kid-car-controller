@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 class AbstractThrottle {
-    public:
-        virtual int getPosition();
+public:
+  virtual int getPosition();
 };
 
 #endif
