@@ -1,19 +1,19 @@
 #include <Arduino.h>
 #include <stdint.h>
 #include <SoftwareSerial.h>
-#include "src/control/WirelessController.h"
-#include "src/control/ThrottlePedal.h"
-#include "src/control/PriorityCompositeThrottle.h"
-#include "src/control/WirelessControllerThrottle.h"
-#include "src/motor/NullMotor.h"
-#include "src/motor/Motor.h"
-#include "src/motor/SteeringMotor.h"
-#include "src/motor/DriveMotor.h"
-#include "src/motor/CompositeMotor.h"
-#include "src/selection/SettingSelector.h"
-#include "src/logging/AbstractLogger.h"
-#include "src/logging/SerialLogger.h"
-#include "src/logging/NullLogger.h"
+#include "control/WirelessController.h"
+#include "control/ThrottlePedal.h"
+#include "control/PriorityCompositeThrottle.h"
+#include "control/WirelessControllerThrottle.h"
+#include "motor/NullMotor.h"
+#include "motor/Motor.h"
+#include "motor/SteeringMotor.h"
+#include "motor/DriveMotor.h"
+#include "motor/CompositeMotor.h"
+#include "selection/SettingSelector.h"
+#include "logging/AbstractLogger.h"
+#include "logging/SerialLogger.h"
+#include "logging/NullLogger.h"
 
 LogLevel DEFAULT_LOG_LEVEL = LogLevel::INFO;
 
@@ -139,7 +139,7 @@ void setup() {
 
   //Log Level
   controller->onButtonPressed(PS2_SELECT, [](){
-    logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR : logger->getLogLevel() + 1);
+    logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR : static_cast<LogLevel>(logger->getLogLevel() + 1));
     logger->info("Log Level: " + logger->getLogLevelName());
   });
 
