@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 
-
 // Define PS2 button to number
 enum {
   // Digital button
@@ -45,21 +44,20 @@ enum {
   PS2_BUTTON_JOYSTICK
 };
 
-class Serial2_PS2Shield
-{
-  public:
-	  uint8_t ps_data[6];
-    uint8_t _txpin, _rxpin;
+class Serial2_PS2Shield {
+public:
+  uint8_t ps_data[6];
+  uint8_t _txpin, _rxpin;
 
-    void begin(uint32_t baudrate);
-    uint8_t readButton(uint8_t key);
-    boolean readAllButton();
-    void vibrate(uint8_t motor, uint8_t value);
-    void reset(uint8_t reset);
+  void begin(uint32_t baudrate);
+  uint8_t readButton(uint8_t key);
+  boolean readAllButton();
+  void vibrate(uint8_t motor, uint8_t value);
+  void reset(uint8_t reset);
 
-  protected:
-    void write(uint8_t data);
-    uint8_t read(void);
+protected:
+  void write(uint8_t data);
+  uint8_t read(void);
 };
 
 #endif

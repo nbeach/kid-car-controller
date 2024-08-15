@@ -1,10 +1,10 @@
 #ifndef PWM_H
 #define PWM_H
 
-#include "../vendor/TimerFive/TimerFive.h"
-#include "../vendor/TimerFour/TimerFour.h"
-#include "../vendor/TimerOne/TimerOne.h"
-#include "../vendor/TimerThree/TimerThree.h"
+#include <TimerFive.h>
+#include <TimerFour.h>
+#include <TimerOne.h>
+#include <TimerThree.h>
 #include <stdint.h> // NOLINT(*-deprecated-headers)
 
 class PWM {

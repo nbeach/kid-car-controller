@@ -1,4 +1,5 @@
 #include "ThrottlePedal.h"
+#include <Arduino.h>
 
 ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin,
                              AbstractLogger *logger) {

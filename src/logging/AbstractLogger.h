@@ -1,7 +1,11 @@
 #ifndef AbstractLogger_h
 #define AbstractLogger_h
 
-#include <Arduino.h>
+#ifdef ARDUINO
+#include <WString.h>
+#else
+#include "../../lib/WString.h"
+#endif
 
 enum LogLevel { ERROR = 0, INFO = 1, DEBUG = 2, TRACE = 3 };
 
@@ -27,31 +31,31 @@ public:
   LogLevel getLogLevel() const { return this->logLevel; }
 
   String getLogLevelName() const {
-    if (logLevel == LogLevel::ERROR)
+    if (logLevel == ERROR)
       return "ERROR";
-    if (logLevel == LogLevel::INFO)
+    if (logLevel == INFO)
       return "INFO";
-    if (logLevel == LogLevel::DEBUG)
+    if (logLevel == DEBUG)
       return "DEBUG";
-    if (logLevel == LogLevel::TRACE)
+    if (logLevel == TRACE)
       return "TRACE";
     return "UNKNOWN";
   }
 
   void error(String text) {
-    if (shouldLog(LogLevel::ERROR))
+    if (shouldLog(ERROR))
       _error(text);
   };
   void info(String text) {
-    if (shouldLog(LogLevel::INFO))
+    if (shouldLog(INFO))
       _info(text);
   };
   void debug(String text) {
-    if (shouldLog(LogLevel::DEBUG))
+    if (shouldLog(DEBUG))
       _debug(text);
   };
   void trace(String text) {
-    if (shouldLog(LogLevel::TRACE))
+    if (shouldLog(TRACE))
       _trace(text);
   };
 };

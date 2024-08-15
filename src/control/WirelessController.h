@@ -1,7 +1,7 @@
 #ifndef WirelessController_h
 #define WirelessController_h
 
-#include "../vendor/Serial2_PS2Shield.h"
+#include "./Serial2_PS2Shield.h"
 
 enum {
   VIBRATION_HEAVY,

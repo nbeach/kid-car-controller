@@ -16,4 +16,6 @@
 //
 //     EXPECT_EQ(motor1->getSpeed(), 100);
 //     EXPECT_EQ(motor2->getSpeed(), 100);
+//
+//     delete logger;
 // }
