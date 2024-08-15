@@ -23,7 +23,7 @@ WirelessController::WirelessController(uint32_t baud) {
     axisCallbacks[i] = nullptr;
   }
 
-  ps2 = Serial2_PS2Shield();
+  ps2 = PS2Shield();
   ps2.begin(baud);
 }
 

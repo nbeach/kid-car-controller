@@ -1,13 +1,13 @@
-#include "Serial2_PS2Shield.h"
+#include "PS2Shield.h"
 #include "HardwareSerial.h"
 
-void Serial2_PS2Shield::begin(uint32_t baudrate) {
+void PS2Shield::begin(uint32_t baudrate) {
   Serial2.begin(baudrate);
   while (!Serial2)
     ;
 }
 
-void Serial2_PS2Shield::write(uint8_t data) {
+void PS2Shield::write(uint8_t data) {
   while (Serial2.available() > 0) {
     Serial2.read();
   }
@@ -15,7 +15,7 @@ void Serial2_PS2Shield::write(uint8_t data) {
   Serial2.flush();
 }
 
-uint8_t Serial2_PS2Shield::read(void) {
+uint8_t PS2Shield::read(void) {
   uint8_t rec_data;
   long waitcount = 0;
 
@@ -31,12 +31,12 @@ uint8_t Serial2_PS2Shield::read(void) {
   }
 }
 
-uint8_t Serial2_PS2Shield::readButton(uint8_t key) {
+uint8_t PS2Shield::readButton(uint8_t key) {
   write(key);
   return read();
 }
 
-boolean Serial2_PS2Shield::readAllButton() {
+boolean PS2Shield::readAllButton() {
   uint8_t nbyte;
 
   write(PS2_BUTTON_JOYSTICK);
@@ -49,7 +49,7 @@ boolean Serial2_PS2Shield::readAllButton() {
     return (false);
 }
 
-void Serial2_PS2Shield::vibrate(uint8_t motor, uint8_t value) {
+void PS2Shield::vibrate(uint8_t motor, uint8_t value) {
   uint8_t _motor;
 
   if (motor == 1)
@@ -61,7 +61,7 @@ void Serial2_PS2Shield::vibrate(uint8_t motor, uint8_t value) {
   write(value);
 }
 
-void Serial2_PS2Shield::reset(uint8_t reset) {
+void PS2Shield::reset(uint8_t reset) {
   if (reset == 1)
     digitalWrite(A1, LOW);
   else

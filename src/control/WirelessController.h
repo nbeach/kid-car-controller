@@ -1,7 +1,7 @@
 #ifndef WirelessController_h
 #define WirelessController_h
 
-#include "./Serial2_PS2Shield.h"
+#include "./PS2Shield.h"
 
 enum {
   VIBRATION_HEAVY,
@@ -10,7 +10,7 @@ enum {
 
 class WirelessController {
 protected:
-  Serial2_PS2Shield ps2;
+  PS2Shield ps2;
   int buttonStates[26];
   int axisStates[26];
   void (*buttonCallbacks[26])();

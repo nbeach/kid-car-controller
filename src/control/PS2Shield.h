@@ -1,5 +1,5 @@
-#ifndef Serial2_PS2Shield_h
-#define Serial2_PS2Shield_h
+#ifndef PS2Shield_h
+#define PS2Shield_h
 
 #include "Arduino.h"
 
@@ -44,7 +44,7 @@ enum {
   PS2_BUTTON_JOYSTICK
 };
 
-class Serial2_PS2Shield {
+class PS2Shield {
 public:
   uint8_t ps_data[6];
   uint8_t _txpin, _rxpin;
