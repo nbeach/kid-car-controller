@@ -2,7 +2,6 @@
 #define WirelessController_h
 
 #include "../vendor/Serial2_PS2Shield.h"
-#include <Arduino.h>
 
 enum {
   VIBRATION_HEAVY,

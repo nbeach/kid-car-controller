@@ -3,7 +3,6 @@
 
 #include "./AbstractLogger.h"
 #include <Arduino.h>
-#include <SoftwareSerial.h>
 
 class SerialLogger : public AbstractLogger {
 public:

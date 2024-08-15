@@ -19,8 +19,8 @@ WirelessController::WirelessController(uint32_t baud) {
   for (int i = 0; i < 26; i++) {
     buttonStates[i] = 1;
     axisStates[i] = 0;
-    buttonCallbacks[i] = NULL;
-    axisCallbacks[i] = NULL;
+    buttonCallbacks[i] = nullptr;
+    axisCallbacks[i] = nullptr;
   }
 
   ps2 = Serial2_PS2Shield();
@@ -58,7 +58,7 @@ void WirelessController::poll() {
 }
 
 void WirelessController::pollButtonState(int button) {
-  if (buttonCallbacks[button] == NULL)
+  if (buttonCallbacks[button] == nullptr)
     return;
 
   int newButtonState = ps2.readButton(button);
@@ -72,7 +72,7 @@ void WirelessController::pollButtonState(int button) {
 }
 
 void WirelessController::pollAxisState(int axis) {
-  if (axisCallbacks[axis] == NULL)
+  if (axisCallbacks[axis] == nullptr)
     return;
 
   int newAxisPoisition = to256Position(ps2.readButton(axis));

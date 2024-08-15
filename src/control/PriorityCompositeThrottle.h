@@ -2,10 +2,8 @@
 #define PriorityCompositeThrottle_h
 
 #include "AbstractThrottle.h"
-#include <Arduino.h>
 
 class PriorityCompositeThrottle : public AbstractThrottle {
-private:
   AbstractThrottle *primary;
   AbstractThrottle *secondary;
   void (*callback)(int) = nullptr;

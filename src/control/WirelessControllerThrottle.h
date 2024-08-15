@@ -5,7 +5,6 @@
 #include "WirelessController.h"
 
 class WirelessControllerThrottle : public AbstractThrottle {
-private:
   WirelessController *controller;
   int throttleAxis;
 

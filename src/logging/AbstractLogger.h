@@ -24,9 +24,9 @@ public:
 
   void setLogLevel(LogLevel logLevel) { this->logLevel = logLevel; }
 
-  LogLevel getLogLevel() { return this->logLevel; }
+  LogLevel getLogLevel() const { return this->logLevel; }
 
-  String getLogLevelName() {
+  String getLogLevelName() const {
     if (logLevel == LogLevel::ERROR)
       return "ERROR";
     if (logLevel == LogLevel::INFO)

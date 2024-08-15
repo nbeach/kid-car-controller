@@ -27,7 +27,7 @@ int PriorityCompositeThrottle::getPosition() {
 
 void PriorityCompositeThrottle::poll() {
   int position = getPosition();
-  if (position != priorPosition && callback != NULL) {
+  if (position != priorPosition && callback != nullptr) {
     priorPosition = position;
     callback(position);
   }

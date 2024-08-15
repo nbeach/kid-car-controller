@@ -33,7 +33,7 @@ template <typename T> void SettingSelector<T>::onChange(void (*callback)(T)) {
 }
 
 template <typename T> void SettingSelector<T>::emitChange() {
-  if (callback != NULL)
+  if (callback != nullptr)
     callback(settings[currentSettingIndex]);
 }
 
