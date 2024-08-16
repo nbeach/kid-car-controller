@@ -1,8 +1,7 @@
 #include "ThrottlePedal.h"
 #include <Arduino.h>
 
-ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin,
-                             AbstractLogger *logger) {
+ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin, AbstractLogger *logger) {
   pinMode(throttlePin, INPUT);
   pinMode(forwardPin, INPUT_PULLUP);
   pinMode(reversePin, INPUT_PULLUP);
@@ -16,8 +15,7 @@ ThrottlePedal::ThrottlePedal(int throttlePin, int forwardPin, int reversePin,
 
 int ThrottlePedal::throttlePosition() {
   int pinValue = analogRead(throttlePin);
-  int withZeroMinimum =
-      pinValue < zeroThrottleReading ? 0 : pinValue - zeroThrottleReading;
+  int withZeroMinimum = pinValue < zeroThrottleReading ? 0 : pinValue - zeroThrottleReading;
   int withClippedMaximum = withZeroMinimum > 500 ? 500 : withZeroMinimum;
   int throttlePosition = (withClippedMaximum / 5) * 2.56;
 

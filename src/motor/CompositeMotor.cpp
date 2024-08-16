@@ -1,7 +1,6 @@
 #include "CompositeMotor.h"
 
-CompositeMotor::CompositeMotor(AbstractMotor **motors, int count,
-                               AbstractLogger *logger) {
+CompositeMotor::CompositeMotor(AbstractMotor **motors, int count, AbstractLogger *logger) {
   this->motors = motors;
   this->count = count;
   this->logger = logger;

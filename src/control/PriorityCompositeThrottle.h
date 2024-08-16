@@ -11,8 +11,7 @@ class PriorityCompositeThrottle : public AbstractThrottle {
   int priorPosition = 0;
 
 public:
-  PriorityCompositeThrottle(AbstractThrottle *primary,
-                            AbstractThrottle *secondary);
+  PriorityCompositeThrottle(AbstractThrottle *primary, AbstractThrottle *secondary);
   ~PriorityCompositeThrottle() override;
   void onPositionChange(void (*func)(int));
   int getPosition() override;

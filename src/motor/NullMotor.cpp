@@ -2,6 +2,4 @@
 
 NullMotor::NullMotor(AbstractLogger *logger) { this->logger = logger; }
 
-void NullMotor::setSpeed(int speed) {
-  this->logger->info("Commanded Speed: " + String(speed));
-}
+void NullMotor::setSpeed(int speed) { this->logger->info("Commanded Speed: " + String(speed)); }

@@ -21,8 +21,7 @@ const bool DISABLE_DRIVE_MOTORS = false;
 const bool DISABLE_LOGGING = false;
 
 const int SPEED_LIMIT_COUNT = 11;
-int *SPEED_LIMITS =
-    new int[SPEED_LIMIT_COUNT]{16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256};
+int *SPEED_LIMITS = new int[SPEED_LIMIT_COUNT]{16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 256};
 const int SPEED_LIMITS_DEFAULT_INDEX = 2;
 
 const uint8_t STEERING_MOTOR_PWM_PIN = 9;
@@ -59,9 +58,8 @@ AbstractLogger *logger;
 void setup() {
   if (!DISABLE_LOGGING)
     Serial.begin(115200);
-  logger = DISABLE_LOGGING
-               ? (AbstractLogger *)new NullLogger(DEFAULT_LOG_LEVEL)
-               : (AbstractLogger *)new SerialLogger(DEFAULT_LOG_LEVEL);
+  logger = DISABLE_LOGGING ? (AbstractLogger *)new NullLogger(DEFAULT_LOG_LEVEL)
+                           : (AbstractLogger *)new SerialLogger(DEFAULT_LOG_LEVEL);
 
   // Wireless Controller
   controller = new WirelessController(CONTROLLER_BAUD);
@@ -72,25 +70,18 @@ void setup() {
     baseMotor = (AbstractMotor *)new NullMotor(logger);
   } else {
     AbstractMotor **motors = new AbstractMotor *[DRIVE_MOTOR_COUNT] {
-      new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN,
-                DRIVE_MOTOR_PWM_FREQUENCY),
-          new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN,
-                    DRIVE_MOTOR_PWM_FREQUENCY),
-          new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN,
-                    DRIVE_MOTOR_PWM_FREQUENCY),
-          new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN,
-                    DRIVE_MOTOR_PWM_FREQUENCY)
+      new Motor(REAR_LEFT_MOTOR_PWM_PIN, REAR_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+          new Motor(REAR_RIGHT_MOTOR_PWM_PIN, REAR_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+          new Motor(FRONT_LEFT_MOTOR_PWM_PIN, FRONT_LEFT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY),
+          new Motor(FRONT_RIGHT_MOTOR_PWM_PIN, FRONT_RIGHT_MOTOR_DIRECTION_PIN, DRIVE_MOTOR_PWM_FREQUENCY)
     };
 
-    baseMotor =
-        (AbstractMotor *)new CompositeMotor(motors, DRIVE_MOTOR_COUNT, logger);
+    baseMotor = (AbstractMotor *)new CompositeMotor(motors, DRIVE_MOTOR_COUNT, logger);
   }
   driveMotor = new DriveMotor(baseMotor, logger);
 
   // Steering Motor
-  steeringMotor =
-      new SteeringMotor(STEERING_MOTOR_PWM_PIN, STEERING_MOTOR_DIRECTION_PIN,
-                        STEERING_MOTOR_RELAY_PIN);
+  steeringMotor = new SteeringMotor(STEERING_MOTOR_PWM_PIN, STEERING_MOTOR_DIRECTION_PIN, STEERING_MOTOR_RELAY_PIN);
 
   controller->onAxisChange(PS2_JOYSTICK_LEFT_X_AXIS, [](int position) {
     logger->info("Steering Position: " + String(position));
@@ -98,11 +89,9 @@ void setup() {
   });
 
   // Throttle
-  WirelessControllerThrottle *controllerThrottle =
-      new WirelessControllerThrottle(controller, PS2_JOYSTICK_RIGHT_Y_AXIS);
-  ThrottlePedal *pedal = new ThrottlePedal(
-      THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN, THROTTLE_PEDAL_FORWARD_ANALOG_PIN,
-      THROTTLE_PEDAL_REVERSE_ANALOG_PIN, logger);
+  WirelessControllerThrottle *controllerThrottle = new WirelessControllerThrottle(controller, PS2_JOYSTICK_RIGHT_Y_AXIS);
+  ThrottlePedal *pedal = new ThrottlePedal(THROTTLE_PEDAL_ACCELERATOR_ANALOG_PIN, THROTTLE_PEDAL_FORWARD_ANALOG_PIN,
+                                           THROTTLE_PEDAL_REVERSE_ANALOG_PIN, logger);
 
   throttle = new PriorityCompositeThrottle(controllerThrottle, pedal);
 
@@ -112,8 +101,7 @@ void setup() {
   });
 
   // Speed Limit Selector
-  speedLimitSelector = new SettingSelector<int>(SPEED_LIMITS, SPEED_LIMIT_COUNT,
-                                                SPEED_LIMITS_DEFAULT_INDEX);
+  speedLimitSelector = new SettingSelector<int>(SPEED_LIMITS, SPEED_LIMIT_COUNT, SPEED_LIMITS_DEFAULT_INDEX);
   driveMotor->setSpeedLimit(speedLimitSelector->currentSetting());
 
   speedLimitSelector->onChange([](int speed) {
@@ -147,9 +135,8 @@ void setup() {
 
   // Log Level
   controller->onButtonPressed(PS2_SELECT, []() {
-    logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE
-                            ? LogLevel::ERROR
-                            : static_cast<LogLevel>(logger->getLogLevel() + 1));
+    logger->setLogLevel(logger->getLogLevel() == LogLevel::TRACE ? LogLevel::ERROR
+                                                                 : static_cast<LogLevel>(logger->getLogLevel() + 1));
     logger->info("Log Level: " + logger->getLogLevelName());
   });
 

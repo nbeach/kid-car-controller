@@ -11,9 +11,7 @@ void WirelessController::maybeEndVibration() {
   }
 }
 
-int WirelessController::to256Position(int rawPosition) {
-  return ((rawPosition - 128) * -2);
-}
+int WirelessController::to256Position(int rawPosition) { return ((rawPosition - 128) * -2); }
 
 WirelessController::WirelessController(uint32_t baud) {
   for (int i = 0; i < 26; i++) {
@@ -84,17 +82,11 @@ void WirelessController::pollAxisState(int axis) {
   axisStates[axis] = newAxisPoisition;
 }
 
-int WirelessController::getAxisState(int axis) {
-  return to256Position(ps2.readButton(axis));
-}
+int WirelessController::getAxisState(int axis) { return to256Position(ps2.readButton(axis)); }
 
-void WirelessController::onButtonPressed(int button, void (*func)()) {
-  buttonCallbacks[button] = func;
-}
+void WirelessController::onButtonPressed(int button, void (*func)()) { buttonCallbacks[button] = func; }
 
-void WirelessController::onAxisChange(int axis, void (*func)(int)) {
-  axisCallbacks[axis] = func;
-}
+void WirelessController::onAxisChange(int axis, void (*func)(int)) { axisCallbacks[axis] = func; }
 
 void WirelessController::vibrate(int level) {
   vibrationStartedTime = millis();

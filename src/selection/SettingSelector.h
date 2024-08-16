@@ -17,20 +17,15 @@ public:
   T currentSetting();
 };
 
-template <typename T>
-SettingSelector<T>::SettingSelector(T *settings, int count, int defaultIndex) {
+template <typename T> SettingSelector<T>::SettingSelector(T *settings, int count, int defaultIndex) {
   this->settings = settings;
   this->settingCount = count;
   this->currentSettingIndex = defaultIndex;
 }
 
-template <typename T> SettingSelector<T>::~SettingSelector() {
-  delete[] settings;
-}
+template <typename T> SettingSelector<T>::~SettingSelector() { delete[] settings; }
 
-template <typename T> void SettingSelector<T>::onChange(void (*callback)(T)) {
-  this->callback = callback;
-}
+template <typename T> void SettingSelector<T>::onChange(void (*callback)(T)) { this->callback = callback; }
 
 template <typename T> void SettingSelector<T>::emitChange() {
   if (callback != nullptr)
@@ -55,8 +50,6 @@ template <typename T> bool SettingSelector<T>::decrease() {
   return false;
 }
 
-template <typename T> T SettingSelector<T>::currentSetting() {
-  return settings[currentSettingIndex];
-}
+template <typename T> T SettingSelector<T>::currentSetting() { return settings[currentSettingIndex]; }
 
 #endif

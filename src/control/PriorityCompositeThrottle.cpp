@@ -1,7 +1,6 @@
 #include "PriorityCompositeThrottle.h"
 
-PriorityCompositeThrottle::PriorityCompositeThrottle(
-    AbstractThrottle *primary, AbstractThrottle *secondary) {
+PriorityCompositeThrottle::PriorityCompositeThrottle(AbstractThrottle *primary, AbstractThrottle *secondary) {
   this->primary = primary;
   this->secondary = secondary;
 }
@@ -11,9 +10,7 @@ PriorityCompositeThrottle::~PriorityCompositeThrottle() {
   delete secondary;
 }
 
-void PriorityCompositeThrottle::onPositionChange(void (*callback)(int)) {
-  this->callback = callback;
-}
+void PriorityCompositeThrottle::onPositionChange(void (*callback)(int)) { this->callback = callback; }
 
 int PriorityCompositeThrottle::getPosition() {
   int primaryPosition = primary->getPosition();

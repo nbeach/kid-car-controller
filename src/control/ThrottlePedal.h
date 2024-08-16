@@ -14,8 +14,7 @@ class ThrottlePedal : public AbstractThrottle {
   AbstractLogger *logger;
 
 public:
-  ThrottlePedal(int throttlePin, int forwardPin, int reversePin,
-                AbstractLogger *logger);
+  ThrottlePedal(int throttlePin, int forwardPin, int reversePin, AbstractLogger *logger);
   int getPosition() override;
 };
 

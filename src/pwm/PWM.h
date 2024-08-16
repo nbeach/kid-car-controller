@@ -11,15 +11,9 @@ class PWM {
   uint8_t pin;
 
   static bool isTimer1(const uint8_t pin) { return pin == 11 || pin == 12; }
-  static bool isTimer3(const uint8_t pin) {
-    return pin == 2 || pin == 3 || pin == 5;
-  }
-  static bool isTimer4(const uint8_t pin) {
-    return pin == 6 || pin == 7 || pin == 8;
-  }
-  static bool isTimer5(const uint8_t pin) {
-    return pin == 44 || pin == 45 || pin == 46;
-  }
+  static bool isTimer3(const uint8_t pin) { return pin == 2 || pin == 3 || pin == 5; }
+  static bool isTimer4(const uint8_t pin) { return pin == 6 || pin == 7 || pin == 8; }
+  static bool isTimer5(const uint8_t pin) { return pin == 44 || pin == 45 || pin == 46; }
 
 public:
   PWM(const uint8_t pin, const int frequency) {

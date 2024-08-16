@@ -18,9 +18,7 @@ protected:
   virtual void _debug(String text);
   virtual void _trace(String text);
 
-  bool shouldLog(LogLevel levelOfLogMessage) {
-    return logLevel >= levelOfLogMessage;
-  }
+  bool shouldLog(LogLevel levelOfLogMessage) { return logLevel >= levelOfLogMessage; }
 
 public:
   explicit AbstractLogger(LogLevel logLevel) { this->logLevel = logLevel; }
