@@ -23,7 +23,7 @@ public:
   }
 
   void setFrequency(const int frequency) const {
-    int microseconds = static_cast<int>(1000000) / frequency;
+    int microseconds = static_cast<int>(1000000.0f / frequency);
 
     if (isTimer1(this->pin)) {
       Timer1.initialize(microseconds);
