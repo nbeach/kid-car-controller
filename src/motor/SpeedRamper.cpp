@@ -28,10 +28,11 @@ void SpeedRamper::tick() {
     int numberLineDirection = targetSpeed >= currentSpeed ? 1 : -1;
     newSpeed = decelerationRampingRate *
                (timeItWouldTakeToAccelerateToCurrentSpeed + (timePassedSinceCurrentSpeedSet * numberLineDirection));
-    if (targetSpeed == 0 && currentSpeed < 0 && newSpeed > 0)
-      newSpeed = 0;
-    if (targetSpeed == 0 && currentSpeed > 0 && newSpeed < 0)
-      newSpeed = 0;
+
+    bool overshotTargetDeceleratingFromForward = currentSpeed > targetSpeed && newSpeed < targetSpeed;
+    bool overshotTargetDeceleratingFromReverse = currentSpeed < targetSpeed && newSpeed > targetSpeed;
+    if (overshotTargetDeceleratingFromForward || overshotTargetDeceleratingFromReverse)
+      newSpeed = targetSpeed;
   } else {
     newSpeed = targetSpeed;
   }
