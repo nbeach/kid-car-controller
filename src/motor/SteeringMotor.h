@@ -2,15 +2,15 @@
 #define SteeringMotor_h
 
 #include "AbstractMotor.h"
-#include <stdint.h>
+#include "Motor.h"
 
 class SteeringMotor : public AbstractMotor {
-  uint8_t pwmPin;
-  uint8_t directionPin;
+  Motor *motor;
   uint8_t relayPin;
 
 public:
-  SteeringMotor(uint8_t pwmPin, uint8_t directionPin, uint8_t relayPin);
+  SteeringMotor(uint8_t pwmPin, uint8_t directionPin, uint8_t relayPin, int pwmFrequency);
+  ~SteeringMotor() override;
   void setSpeed(int speed);
 };
 

@@ -1,27 +1,17 @@
 #include "SteeringMotor.h"
 #include <Arduino.h>
 
-SteeringMotor::SteeringMotor(uint8_t pwmPin, uint8_t directionPin, uint8_t relayPin) {
-  this->pwmPin = pwmPin;
-  this->directionPin = directionPin;
+SteeringMotor::SteeringMotor(uint8_t pwmPin, uint8_t directionPin, uint8_t relayPin, int pwmFrequency) {
+  this->motor = new Motor(pwmPin, directionPin, pwmFrequency);
   this->relayPin = relayPin;
 
   pinMode(relayPin, OUTPUT);
-  pinMode(pwmPin, OUTPUT);
-  pinMode(directionPin, OUTPUT);
   digitalWrite(relayPin, LOW);
-  digitalWrite(pwmPin, LOW);
-  digitalWrite(directionPin, LOW);
 }
 
-void SteeringMotor::setSpeed(int speed) {
-  if (speed > 255) {
-    speed = 255;
-  } else if (speed < -255) {
-    speed = -255;
-  }
+SteeringMotor::~SteeringMotor() { delete motor; }
 
-  analogWrite(pwmPin, speed >= 0 ? speed : -speed);
-  digitalWrite(directionPin, speed >= 0 ? LOW : HIGH);
+void SteeringMotor::setSpeed(int speed) {
+  this->motor->setSpeed(speed);
   digitalWrite(relayPin, speed != 0 ? HIGH : LOW);
 }

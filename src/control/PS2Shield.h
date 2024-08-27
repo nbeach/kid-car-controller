@@ -46,8 +46,10 @@ enum {
 
 class PS2Shield {
 public:
+  boolean SERIAL_ERR;
   uint8_t ps_data[6];
-  uint8_t _txpin, _rxpin;
+
+  PS2Shield();
 
   void begin(uint32_t baudrate);
   uint8_t readButton(uint8_t key);
