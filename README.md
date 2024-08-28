@@ -4,7 +4,7 @@
 - 01 - PS2 RX
 - ---
 - 09 - Steering PWM 
-- 10 - Steering Dir
+- 13 - Steering Dir
 - ---
 - 03 - RL PWM
 - 02 - RL Dir
