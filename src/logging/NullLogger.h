@@ -2,7 +2,6 @@
 #define NullLogger_h
 
 #include "./AbstractLogger.h"
-#include <Arduino.h>
 
 class NullLogger : public AbstractLogger {
 public:
